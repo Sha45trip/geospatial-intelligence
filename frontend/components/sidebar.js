@@ -134,11 +134,12 @@ function buildSidebarHTML() {
 
       /* ======== SCROLL AREA ======== */
       .geo-sb-scroll { flex: 1; overflow-y: auto; overflow-x: hidden; padding: 4px 0; }
-      .geo-sb-section { padding: ${c ? '2px 4px' : '2px 12px'}; }
+      .geo-sb-section { padding: ${c ? '1px 4px' : '2px 12px'}; }
       .geo-sb-section-label {
         font-size: 0.65rem; font-weight: 700; color: #a855f7;
         text-transform: uppercase; letter-spacing: 0.08em;
-        padding: 8px 12px 4px; margin: 0;
+        padding: ${c ? '4px 0' : '8px 12px 4px'}; margin: 0;
+        text-align: ${c ? 'center' : 'left'};
       }
       .geo-sb-nav { display: flex; flex-direction: column; gap: 2px; }
       .geo-nav-sep {
@@ -152,7 +153,7 @@ function buildSidebarHTML() {
         display: flex;
         align-items: center;
         gap: ${c ? '0' : '12px'};
-        padding: ${c ? '8px 0' : '8px 12px'};
+        padding: ${c ? '4px 0' : '8px 12px'};
         justify-content: ${c ? 'center' : 'flex-start'};
         text-decoration: none;
         color: #1e293b;
@@ -210,7 +211,7 @@ async function renderGeoSidebar() {
   // Update main grid column
   const container = document.getElementById('app-container');
   if (container) {
-    container.style.gridTemplateColumns = `${geoSidebarCollapsed ? 56 : 280}px 1fr`;
+    container.style.gridTemplateColumns = `${geoSidebarCollapsed ? 48 : 260}px 1fr`;
   }
 
   if (typeof lucide !== 'undefined') lucide.createIcons();
