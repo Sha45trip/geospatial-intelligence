@@ -100,10 +100,34 @@ window.GEO_MOCK_POI = {
     "malls": [ { "name": "Phoenix Marketcity", "lat": 18.56, "lng": 73.91, "distance_km": 4.8 } ],
     "substations": [ { "name": "Pune East Grid", "lat": 18.52, "lng": 73.88, "distance_km": 2.1 } ]
   },
+  "site_002": {
+    "highways": [ { "name": "Eastern Express Hwy", "lat": 19.08, "lng": 72.88, "distance_km": 0.8 } ],
+    "competitors": [ { "name": "Tata Tech Hub", "lat": 19.10, "lng": 72.90, "distance_km": 3.2 } ],
+    "malls": [ { "name": "R-City Mall", "lat": 19.09, "lng": 72.91, "distance_km": 4.1 } ],
+    "substations": [ { "name": "Ghatkopar Substation", "lat": 19.07, "lng": 72.89, "distance_km": 1.5 } ]
+  },
+  "site_003": {
+    "highways": [ { "name": "Outer Ring Road", "lat": 12.98, "lng": 77.60, "distance_km": 1.5 } ],
+    "competitors": [ { "name": "Infosys Campus", "lat": 12.96, "lng": 77.58, "distance_km": 2.8 } ],
+    "malls": [ { "name": "Indiranagar Retail", "lat": 12.97, "lng": 77.63, "distance_km": 5.2 } ],
+    "substations": [ { "name": "HAL Power Station", "lat": 12.95, "lng": 77.61, "distance_km": 3.4 } ]
+  },
+  "site_004": {
+    "highways": [ { "name": "Bengaluru-Mysuru Hwy", "lat": 12.30, "lng": 76.64, "distance_km": 0.9 } ],
+    "competitors": [ { "name": "Local Logistics", "lat": 12.28, "lng": 76.62, "distance_km": 4.5 } ],
+    "malls": [ { "name": "Mall of Mysore", "lat": 12.31, "lng": 76.66, "distance_km": 6.7 } ],
+    "substations": [ { "name": "Mysuru South Grid", "lat": 12.27, "lng": 76.65, "distance_km": 2.2 } ]
+  },
   "site_005": {
     "highways": [ { "name": "Delhi-Gurugram Expway", "lat": 28.47, "lng": 77.04, "distance_km": 0.5 } ],
     "competitors": [ { "name": "Local Hub", "lat": 28.45, "lng": 77.01, "distance_km": 3.1 } ],
     "malls": [ { "name": "Ambience Mall", "lat": 28.50, "lng": 77.09, "distance_km": 6.2 } ],
     "substations": [ { "name": "Sector 45 Grid", "lat": 28.44, "lng": 77.03, "distance_km": 1.8 } ]
+  },
+  "site_007": {
+    "highways": [ { "name": "Kolkata Bypass", "lat": 22.58, "lng": 88.37, "distance_km": 1.1 } ],
+    "competitors": [ { "name": "Ambuja Neotia Site", "lat": 22.55, "lng": 88.35, "distance_km": 2.9 } ],
+    "malls": [ { "name": "South City Mall", "lat": 22.50, "lng": 88.36, "distance_km": 7.4 } ],
+    "substations": [ { "name": "CESC Central Station", "lat": 22.56, "lng": 88.38, "distance_km": 2.0 } ]
   }
 };

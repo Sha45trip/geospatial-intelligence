@@ -124,7 +124,7 @@
 <script src="../components/map-panel.js"></script>
 <script src="../components/toast.js"></script>
 <script>
-  let cMap, lyrGroups = {}, activeSiteId = null, activeRadius = 5, allPoiData = null;
+  let cMap, lyrGroups = {}, activeSiteId = null, activeRadius = 5, allPoiData = null, allSites = [];
 
   function initMap() {
     cMap = L.map('catchment-map', { zoomControl: false, attributionControl: true }).setView([20.5937,78.9629],5);
@@ -144,26 +144,28 @@
   }
 
   async function loadData() {
-    let own, comp, poi;
     try {
-      const [ownRes, compRes, poiRes] = await Promise.all([
-        fetch('../../mock-data/sites-own.json'),
-        fetch('../../mock-data/sites-competitor.json'),
-        fetch('../../mock-data/catchment-poi.json')
-      ]);
-      own = await ownRes.json();
-      comp = await compRes.json();
-      poi = await poiRes.json();
-    } catch (e) {
-      console.warn("Fetch failed, using fallback data", e);
-      own = window.GEO_MOCK_SITES_OWN;
-      comp = window.GEO_MOCK_SITES_COMP;
-      poi = window.GEO_MOCK_POI;
-    }
-    
-    const sites = [...own, ...comp];
-    allPoiData = poi;
+      let own, comp, poi;
+      try {
+        const [ownRes, compRes, poiRes] = await Promise.all([
+          fetch('../../mock-data/sites-own.json'),
+          fetch('../../mock-data/sites-competitor.json'),
+          fetch('../../mock-data/catchment-poi.json')
+        ]);
+        own = await ownRes.json();
+        comp = await compRes.json();
+        poi = await poiRes.json();
+      } catch (e) {
+        console.warn("Fetch failed, using fallback data", e);
+        own = window.GEO_MOCK_SITES_OWN;
+        comp = window.GEO_MOCK_SITES_COMP;
+        poi = window.GEO_MOCK_POI;
+      }
       
+      allSites = [...own, ...comp];
+      allPoiData = poi;
+      const sites = allSites;
+        
       const sel = document.getElementById('site-select');
       sites.forEach(s => {
         const o = document.createElement('option'); o.value = s.id; o.textContent = s.name; sel.appendChild(o);
@@ -179,7 +181,7 @@
         selectSite(targetId);
         runAnalysis();
       }
-    } catch(e) { console.error(e); }
+    } catch(e) { console.error("Catchment loadData error:", e); }
   }
 
   function selectSite(id) {
@@ -193,8 +195,7 @@
     await new Promise(r => setTimeout(r, 800));
 
     try {
-      const sites = await (await fetch('../../mock-data/sites-own.json')).json();
-      const site = sites.find(s => s.id === activeSiteId);
+      const site = allSites.find(s => s.id === activeSiteId);
       const catchment = allPoiData[activeSiteId] || {};
 
       document.getElementById('map-loader').style.display = 'none';
