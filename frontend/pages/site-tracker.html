@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Site Development Tracker | Prudent Geospatial</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="../styles/tokens.css">
+  <link rel="stylesheet" href="../styles/main.css">
+  <style>
+    body { overflow: hidden; }
+    #main-content { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+    .tracker-body { flex: 1; display: grid; grid-template-columns: 1fr 360px; overflow: hidden; }
+    .panel-body { flex: 1; overflow-y: auto; padding: 20px; }
+    .kpi-mini-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px; }
+    .kpi-mini { background: #fdfbff; border: 1px solid rgba(168,85,247,0.1); border-radius: 8px; padding: 12px; }
+    .kpi-mini-label { font-size: 0.65rem; font-weight: 700; color: #7c3aed; text-transform: uppercase; }
+    .kpi-mini-val { font-size: 1.1rem; font-weight: 700; color: #1e1b4b; margin-top: 4px; }
+    
+    .map-col { display: flex; flex-direction: column; overflow: hidden; background: #f8fafc; }
+    #tracker-map { flex: 1; min-height: 0; width: 100%; }
+    .analysis-bottom { 
+      height: 320px; background: white; border-top: 1px solid rgba(168,85,247,0.12); 
+      padding: 16px 24px; overflow: hidden; display: none; flex-shrink: 0;
+    }
+    .analysis-grid { display: grid; grid-template-columns: 340px 1fr 300px; gap: 20px; height: 100%; }
+    
+    .insight-card { background: #f5f3ff; border: 1px solid rgba(139,92,246,0.15); border-radius: 10px; padding: 14px; height: 100%; display: flex; flex-direction: column; }
+    .milestone-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; font-size: 0.75rem; }
+    .milestone-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .dot-done { background: #10b981; }
+    .dot-progress { background: #f59e0b; }
+    .dot-todo { background: #cbd5e1; }
+    
+    .ctrl-bar { background: white; border-bottom: 1px solid rgba(168,85,247,0.15); padding: 12px 24px; display: flex; align-items: center; gap: 16px; flex-shrink: 0; }
+    .ctrl-select { appearance: none; border: 1px solid rgba(168,85,247,0.35); border-radius: 8px; padding: 7px 32px 7px 12px; font-size: 0.85rem; color: #111827; background: white url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%239333ea' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") no-repeat right 10px center; min-width: 180px; font-family: 'Inter', sans-serif; cursor: pointer; }
+    .sat-card { background: #1e1b4b; border-radius: 10px; padding: 15px; margin-bottom: 20px; color: white; display: none; }
+    .timeline-strip { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 15px; }
+    .timeline-item { min-width: 80px; padding: 8px; border: 1px solid rgba(168,85,247,0.2); border-radius: 6px; text-align: center; cursor: pointer; transition: all 0.15s; }
+    .timeline-item:hover { background: #f5f3ff; }
+    .timeline-item.active { background: #9333ea; border-color: #9333ea; color: white; }
+    .tl-month { font-size: 0.65rem; font-weight: 600; opacity: 0.8; }
+    .tl-pct { font-size: 0.9rem; font-weight: 700; margin-top: 2px; }
+
+    /* Counter Animation */
+    @property --num {
+      syntax: '<integer>';
+      initial-value: 0;
+      inherits: false;
+    }
+    .counter {
+      transition: --num 1s;
+      counter-reset: num var(--num);
+    }
+    .counter::after {
+      content: counter(num) "%";
+    }
+  </style>
+</head>
+<body>
+<div id="app-container">
+  <aside id="sidebar"></aside>
+  <div id="main-wrapper">
+    <nav id="navbar"></nav>
+    <div id="main-content">
+      <div class="ctrl-bar">
+        <div style="display:flex; flex-direction:column;">
+          <span style="font-size:0.6rem; font-weight:700; color:#7c3aed; text-transform:uppercase; margin-bottom:2px;">Portfolio</span>
+          <select class="ctrl-select" id="portfolio-select" onchange="filterSitesByPortfolio()">
+            <option value="">All Portfolios</option>
+          </select>
+        </div>
+        <div style="display:flex; flex-direction:column;">
+          <span style="font-size:0.6rem; font-weight:700; color:#7c3aed; text-transform:uppercase; margin-bottom:2px;">Select Site</span>
+          <select class="ctrl-select" id="site-select" onchange="loadSite(this.value)">
+            <option value="">Select a site...</option>
+          </select>
+        </div>
+        <div style="display:flex; align-items:center; gap:8px;">
+          <div style="display:flex; flex-direction:column;">
+            <span style="font-size:0.6rem; font-weight:700; color:#7c3aed; text-transform:uppercase; margin-bottom:2px;">Start Date</span>
+            <select class="ctrl-select" id="start-date" style="min-width:120px;">
+              <option>01-2024</option>
+              <option>02-2024</option>
+              <option>03-2024</option>
+            </select>
+          </div>
+          <div style="display:flex; flex-direction:column;">
+            <span style="font-size:0.6rem; font-weight:700; color:#7c3aed; text-transform:uppercase; margin-bottom:2px;">End Date</span>
+            <select class="ctrl-select" id="end-date" style="min-width:120px;">
+              <option selected>05-2024</option>
+              <option>06-2024</option>
+              <option>07-2024</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="tracker-body">
+        <div class="map-col">
+          <div id="tracker-map"></div>
+          <div class="analysis-bottom" id="analysis-bottom">
+            <div style="font-size:0.7rem; font-weight:700; color:#7c3aed; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:12px; display:flex; justify-content:space-between; align-items:center;">
+              <span>Time Series Analysis — Development Progress</span>
+              <span style="font-size:0.6rem; color:#6b7280; font-weight:400; text-transform:none;">Source: Sentinel-2 SAR Analysis</span>
+            </div>
+            <div class="analysis-grid">
+              <!-- Column 1: Satellite & Timeline -->
+              <div class="sat-card" id="sat-card" style="display:block; margin-bottom:0; height:100%; background: #1e1b4b;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                  <span style="font-size:0.75rem; font-weight:600; opacity:0.8;">Latest Imagery</span>
+                  <span style="font-size:0.7rem; color:#10b981; font-weight:700; background:rgba(16,185,129,0.1); padding:2px 8px; border-radius:99px;">Sentinel-2</span>
+                </div>
+                <div style="display:flex; gap:12px; align-items:center;">
+                  <div style="width:50px; height:50px; border-radius:8px; background:linear-gradient(135deg, #1e1b4b, #312e81); border:1px solid rgba(255,255,255,0.2); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                    <i data-lucide="satellite" style="width:24px; height:24px; color:#3b82f6;"></i>
+                  </div>
+                  <div>
+                    <div id="sat-date" style="font-size:0.8rem; font-weight:700;">—</div>
+                    <div style="font-size:0.6rem; opacity:0.7; margin-top:1px;">Cloud Cover: 1.2%</div>
+                  </div>
+                  <div id="sat-pct" class="counter" style="margin-left:auto; font-size:1rem; font-weight:800; color:#3b82f6; border:2px solid #3b82f6; width:40px; height:40px; border-radius:50%; display:flex; align-items:center; justify-content:center; --num: 0;"></div>
+                </div>
+                <div class="timeline-strip" id="timeline-strip" style="margin-top:16px; margin-bottom:0; max-width:290px;"></div>
+              </div>
+
+              <!-- Column 2: Chart -->
+              <div style="height:100%; position:relative; background:#fff; border:1px solid rgba(168,85,247,0.1); border-radius:10px; padding:10px;">
+                <canvas id="progressChart"></canvas>
+              </div>
+
+              <!-- Column 3: Insights -->
+              <div class="insight-card">
+                <div style="display:flex; align-items:center; gap:6px; color:#7c3aed; margin-bottom:10px;">
+                  <i data-lucide="sparkles" style="width:14px;height:14px;"></i>
+                  <span style="font-size:0.7rem; font-weight:700; text-transform:uppercase;">Key Insights</span>
+                </div>
+                <div id="analysis-insights" style="font-size:0.75rem; color:#4b5563; line-height:1.4; flex:1; overflow-y:auto; margin-bottom:12px;">
+                  Select a site to see analysis insights.
+                </div>
+                <div style="border-top:1px solid rgba(168,85,247,0.1); padding-top:10px;">
+                  <div id="analysis-milestones"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="side-panel">
+          <div class="panel-header">
+            <div style="font-size:0.7rem; font-weight:700; color:#7c3aed; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:4px;">Site Details</div>
+            <div id="panel-site-name" style="font-size:1.1rem; font-weight:700; color:#1e1b4b;">No Site Selected</div>
+            <div id="panel-site-coords" style="font-size:0.75rem; color:#6b7280; font-family:'JetBrains Mono'; margin-top:2px;">—</div>
+          </div>
+          <div class="panel-body">
+            <div id="site-meta" style="display:none;">
+              <div class="kpi-mini-row">
+                <div class="kpi-mini"><div class="kpi-mini-label">State</div><div class="kpi-mini-val" id="kpi-state">—</div></div>
+                <div class="kpi-mini"><div class="kpi-mini-label">Observations</div><div class="kpi-mini-val" id="kpi-obs">—</div></div>
+                <div class="kpi-mini"><div class="kpi-mini-label">Last Updated</div><div class="kpi-mini-val" id="kpi-updated">—</div></div>
+              </div>
+
+              <div>
+                <div style="font-size:0.7rem; font-weight:700; color:#7c3aed; text-transform:uppercase; margin-bottom:10px;">Monthly Completion Data</div>
+                <table style="width:100%; border-collapse:collapse; font-size:0.8rem;">
+                  <thead><tr style="text-align:left; color:#6b7280; font-size:0.65rem; text-transform:uppercase; border-bottom:1px solid rgba(168,85,247,0.1);"><th style="padding:6px 10px;">Month</th><th style="padding:6px 10px;text-align:right;">Completion</th><th style="padding:6px 10px;text-align:right;">Change</th></tr></thead>
+                  <tbody id="monthly-table"></tbody>
+                </table>
+              </div>
+
+              <div style="margin-top:24px;">
+                <button class="btn btn-primary w-full" onclick="showToast('Export queued — PNG will be ready shortly','info')">
+                  <i data-lucide="download" style="width:16px;height:16px;"></i> Download PNG
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="../components/navbar.js"></script>
+<script src="../components/sidebar.js"></script>
+<script src="../components/mock-data.js"></script>
+<script src="../components/map-panel.js"></script>
+<script src="../components/toast.js"></script>
+<script>
+  let trackerMap, siteLayer, progressChart, allSiteData, allSites = [], portfolioData = [];
+
+  function initMap() {
+    trackerMap = L.map('tracker-map', { zoomControl: false, attributionControl: true }).setView([20.5937, 78.9629], 5);
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png').addTo(trackerMap);
+    siteLayer = L.layerGroup().addTo(trackerMap);
+  }
+
+  async function loadData() {
+    try {
+      let own, comp, cd, port;
+      try {
+        const [ownRes, compRes, cdRes, portRes] = await Promise.all([
+          fetch('../../mock-data/sites-own.json'),
+          fetch('../../mock-data/sites-competitor.json'),
+          fetch('../../mock-data/change-detection.json'),
+          fetch('../../mock-data/portfolios.json')
+        ]);
+        own = await ownRes.json(); comp = await compRes.json();
+        cd = await cdRes.json(); port = await portRes.json();
+      } catch (e) {
+        console.warn("Using fallback data");
+        own = window.GEO_MOCK_SITES_OWN; comp = window.GEO_MOCK_SITES_COMP;
+        cd = { sites: window.GEO_MOCK_CHANGE_DETECTION }; port = window.GEO_MOCK_PORTFOLIOS;
+      }
+      
+      allSites = [...own, ...comp];
+      allSiteData = cd.sites;
+      portfolioData = port;
+
+      const pSel = document.getElementById('portfolio-select');
+      portfolioData.forEach(p => {
+        const o = document.createElement('option'); o.value = p.id; o.textContent = p.name;
+        pSel.appendChild(o);
+      });
+
+      populateSiteSelect(allSites);
+
+      const urlId = new URLSearchParams(window.location.search).get('site');
+      const targetId = urlId || (allSites.length > 0 ? allSites[0].id : null);
+      if (targetId) { 
+        document.getElementById('site-select').value = targetId; 
+        loadSite(targetId); 
+      }
+    } catch(e) { console.error("loadData error:", e); }
+  }
+
+  function populateSiteSelect(sites) {
+    const sel = document.getElementById('site-select');
+    while (sel.options.length > 1) sel.remove(1);
+    siteLayer.clearLayers();
+    sites.forEach(s => {
+      const opt = document.createElement('option'); opt.value = s.id; opt.textContent = s.name;
+      sel.appendChild(opt);
+      L.circleMarker([s.lat, s.lng], { radius:8, fillColor:'#9333ea', color:'#fff', weight:2, opacity:1, fillOpacity:.75 })
+        .addTo(siteLayer).on('click', () => { sel.value = s.id; loadSite(s.id); });
+    });
+  }
+
+  function filterSitesByPortfolio() {
+    const portId = document.getElementById('portfolio-select').value;
+    if (!portId) { populateSiteSelect(allSites); return; }
+    const port = portfolioData.find(p => p.id === portId);
+    const filtered = allSites.filter(s => port?.site_ids.includes(s.id));
+    populateSiteSelect(filtered);
+  }
+
+  function loadSite(siteId) {
+    const site = allSiteData?.[siteId];
+    if (!site) return;
+
+    document.getElementById('panel-site-name').textContent   = site.name;
+    document.getElementById('panel-site-coords').textContent = `${site.lat?.toFixed(4)}, ${site.lng?.toFixed(4)}`;
+    document.getElementById('kpi-state').textContent    = site.state || '—';
+    document.getElementById('kpi-obs').textContent      = site.monthly_progress?.length || '0';
+    document.getElementById('kpi-updated').textContent  = site.monthly_progress?.slice(-1)[0]?.month || '—';
+    document.getElementById('site-meta').style.display  = 'block';
+
+    trackerMap.setView([site.lat, site.lng], 14);
+    siteLayer.clearLayers();
+    L.marker([site.lat, site.lng], {
+      icon: L.divIcon({ className:'', html:`<div style="width:24px;height:24px;background:#9333ea;border:3px solid white;border-radius:50%;box-shadow:0 2px 8px rgba(0,0,0,0.3);"></div>`, iconSize:[24,24], iconAnchor:[12,12] })
+    }).addTo(siteLayer);
+    L.circle([site.lat, site.lng], { radius:10000, color:'#9333ea', weight:1.5, dashArray:'6,10', fillOpacity:0.05 }).addTo(siteLayer);
+
+    const prog = site.monthly_progress || [];
+    renderTimeline(prog);
+    renderChart(prog);
+    renderMonthlyTable(prog);
+    
+    // Update Insights & Milestones
+    const analysis = site.analysis || { insights: "No specific insights available for this period.", milestones: [] };
+    document.getElementById('analysis-insights').textContent = analysis.insights;
+    document.getElementById('analysis-milestones').innerHTML = (analysis.milestones || []).map(m => `
+      <div class="milestone-row">
+        <span class="milestone-dot ${m.status === 'Completed' ? 'dot-done' : 'dot-progress'}"></span>
+        <span style="flex:1;">${m.name}</span>
+        <span style="color:#9ca3af; font-size:0.65rem;">${m.date}</span>
+      </div>
+    `).join('');
+
+    if (prog.length) updateSat(prog[prog.length-1]);
+    document.getElementById('analysis-bottom').style.display = 'block';
+    if (typeof lucide !== 'undefined') lucide.createIcons();
+  }
+
+  function renderMonthlyTable(prog) {
+    const tbody = document.getElementById('monthly-table');
+    tbody.innerHTML = [...prog].reverse().map((p, i, arr) => {
+      const prev = arr[i + 1], delta = prev ? p.pct_completion - prev.pct_completion : null;
+      const deltaHtml = delta === null ? '—' : (delta >= 0 ? `<span style="color:#10b981">+${delta}%</span>` : `<span style="color:#ef4444">${delta}%</span>`);
+      return `<tr style="border-bottom:1px solid rgba(168,85,247,0.06);"><td style="padding:6px 10px;">${p.month}</td><td style="padding:6px 10px;text-align:right;font-weight:600;">${p.pct_completion}%</td><td style="padding:6px 10px;text-align:right;">${deltaHtml}</td></tr>`;
+    }).join('');
+  }
+
+  function renderTimeline(prog) {
+    const strip = document.getElementById('timeline-strip');
+    strip.innerHTML = prog.map((p, i) => `<div class="timeline-item ${i === prog.length-1 ? 'active' : ''}" onclick="selectMonth(this, ${JSON.stringify(p).replace(/"/g,'&quot;')})"><div class="tl-month">${p.month}</div><div class="tl-pct">${p.pct_completion}%</div></div>`).join('');
+  }
+
+  function selectMonth(el, data) {
+    document.querySelectorAll('.timeline-item').forEach(i => i.classList.remove('active'));
+    el.classList.add('active'); updateSat(data);
+  }
+
+  function updateSat(data) {
+    document.getElementById('sat-date').textContent = data.month;
+    document.getElementById('sat-pct').style.setProperty('--num', data.pct_completion);
+  }
+
+  function renderChart(prog) {
+    const ctx = document.getElementById('progressChart');
+    if (progressChart) progressChart.destroy();
+    progressChart = new Chart(ctx, {
+      type: 'line',
+      data: { labels: prog.map(p => p.month), datasets: [{ data: prog.map(p => p.pct_completion), borderColor: '#9333ea', backgroundColor: 'rgba(147,51,234,0.1)', fill: true, tension: 0.4 }] },
+      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { min:0, max:100 } } }
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', () => { initMap(); loadData(); });
+</script>
+</body>
+</html>

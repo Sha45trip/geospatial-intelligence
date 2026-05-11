@@ -1,0 +1,29 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": { "name": "Humayun's Tomb", "category": "Heritage Site" },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[77.24, 28.59], [77.26, 28.59], [77.26, 28.60], [77.24, 28.60], [77.24, 28.59]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "Victoria Memorial", "category": "Heritage Site" },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[88.34, 22.54], [88.35, 22.54], [88.35, 22.55], [88.34, 22.55], [88.34, 22.54]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "Shaniwar Wada", "category": "Heritage Site" },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[73.85, 18.51], [73.86, 18.51], [73.86, 18.52], [73.85, 18.52], [73.85, 18.51]]]
+      }
+    }
+  ]
+}

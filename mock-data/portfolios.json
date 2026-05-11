@@ -1,0 +1,26 @@
+[
+  {
+    "id": "port_mh",
+    "name": "Maharashtra Portfolio",
+    "state": "Maharashtra",
+    "site_ids": ["site_001", "site_002"]
+  },
+  {
+    "id": "port_ka",
+    "name": "Karnataka Portfolio",
+    "state": "Karnataka",
+    "site_ids": ["site_003", "site_004"]
+  },
+  {
+    "id": "port_dl",
+    "name": "Delhi NCR Portfolio",
+    "state": "Delhi NCR",
+    "site_ids": ["site_005", "site_006"]
+  },
+  {
+    "id": "port_wb",
+    "name": "West Bengal Portfolio",
+    "state": "West Bengal",
+    "site_ids": ["site_007", "site_008"]
+  }
+]

@@ -1,0 +1,29 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": { "name": "Sanjay Gandhi National Park", "category": "National Park" },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[72.85, 19.18], [72.95, 19.18], [72.95, 19.28], [72.85, 19.28], [72.85, 19.18]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "Bannerghatta National Park", "category": "National Park" },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[77.52, 12.75], [77.62, 12.75], [77.62, 12.85], [77.52, 12.85], [77.52, 12.75]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "Sultanpur National Park", "category": "National Park" },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[76.88, 28.45], [76.92, 28.45], [76.92, 28.48], [76.88, 28.48], [76.88, 28.45]]]
+      }
+    }
+  ]
+}

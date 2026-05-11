@@ -1,0 +1,26 @@
+{
+  "site_001": {
+    "highways": [ { "name": "NH-48", "lat": 18.53, "lng": 73.86, "distance_km": 1.2 } ],
+    "competitors": [ { "name": "Reliance Warehouse", "lat": 18.51, "lng": 73.84, "distance_km": 2.5 } ],
+    "malls": [ { "name": "Phoenix Marketcity", "lat": 18.56, "lng": 73.91, "distance_km": 4.8 } ],
+    "substations": [ { "name": "Pune East Grid", "lat": 18.52, "lng": 73.88, "distance_km": 2.1 } ]
+  },
+  "site_002": {
+    "highways": [ { "name": "Eastern Express Hwy", "lat": 19.10, "lng": 72.92, "distance_km": 2.2 } ],
+    "competitors": [ { "name": "Adani Hub", "lat": 19.08, "lng": 72.89, "distance_km": 1.8 } ],
+    "malls": [ { "name": "R-City Mall", "lat": 19.09, "lng": 72.91, "distance_km": 3.4 } ],
+    "substations": [ { "name": "MSEDCL Mumbai", "lat": 19.07, "lng": 72.85, "distance_km": 2.9 } ]
+  },
+  "comp_001": {
+    "highways": [ { "name": "NH-48", "lat": 18.56, "lng": 73.81, "distance_km": 0.8 } ],
+    "competitors": [ { "name": "Pune Logistics Hub", "lat": 18.52, "lng": 73.85, "distance_km": 2.5 } ],
+    "malls": [ { "name": "Pavilion Mall", "lat": 18.53, "lng": 73.83, "distance_km": 3.2 } ],
+    "substations": [ { "name": "Aundh Grid", "lat": 18.55, "lng": 73.82, "distance_km": 1.5 } ]
+  },
+  "comp_002": {
+    "highways": [ { "name": "Western Express Hwy", "lat": 19.12, "lng": 72.85, "distance_km": 1.5 } ],
+    "competitors": [ { "name": "Mumbai Tech Park", "lat": 19.07, "lng": 72.87, "distance_km": 1.8 } ],
+    "malls": [ { "name": "Inorbit Mall", "lat": 19.17, "lng": 72.83, "distance_km": 5.2 } ],
+    "substations": [ { "name": "Malad Station", "lat": 19.18, "lng": 72.84, "distance_km": 2.1 } ]
+  }
+}

@@ -1,0 +1,121 @@
+{
+  "sites": {
+    "site_001": {
+      "name": "Pune Logistics Hub",
+      "state": "Maharashtra",
+      "lat": 18.5204,
+      "lng": 73.8567,
+      "monthly_progress": [
+        { "month": "2024-01", "pct_completion": 5 },
+        { "month": "2024-02", "pct_completion": 12 },
+        { "month": "2024-03", "pct_completion": 20 },
+        { "month": "2024-04", "pct_completion": 28 },
+        { "month": "2024-05", "pct_completion": 35 }
+      ]
+    },
+    "site_002": {
+      "name": "Mumbai Tech Park",
+      "state": "Maharashtra",
+      "lat": 19.0760,
+      "lng": 72.8777,
+      "monthly_progress": [
+        { "month": "2024-01", "pct_completion": 10 },
+        { "month": "2024-02", "pct_completion": 15 },
+        { "month": "2024-03", "pct_completion": 22 },
+        { "month": "2024-04", "pct_completion": 30 },
+        { "month": "2024-05", "pct_completion": 38 }
+      ]
+    },
+    "site_003": {
+      "name": "Bengaluru East Campus",
+      "state": "Karnataka",
+      "lat": 12.9716,
+      "lng": 77.5946,
+      "monthly_progress": [
+        { "month": "2024-01", "pct_completion": 2 },
+        { "month": "2024-02", "pct_completion": 8 },
+        { "month": "2024-03", "pct_completion": 15 },
+        { "month": "2024-04", "pct_completion": 22 },
+        { "month": "2024-05", "pct_completion": 29 }
+      ]
+    },
+    "site_004": {
+      "name": "Mysuru Warehousing",
+      "state": "Karnataka",
+      "lat": 12.2958,
+      "lng": 76.6394,
+      "monthly_progress": [
+        { "month": "2024-01", "pct_completion": 8 },
+        { "month": "2024-02", "pct_completion": 14 },
+        { "month": "2024-03", "pct_completion": 21 },
+        { "month": "2024-04", "pct_completion": 29 },
+        { "month": "2024-05", "pct_completion": 36 }
+      ]
+    },
+    "site_005": {
+      "name": "Gurugram Retail Plaza",
+      "state": "Delhi NCR",
+      "lat": 28.4595,
+      "lng": 77.0266,
+      "monthly_progress": [
+        { "month": "2024-01", "pct_completion": 12 },
+        { "month": "2024-02", "pct_completion": 19 },
+        { "month": "2024-03", "pct_completion": 26 },
+        { "month": "2024-04", "pct_completion": 34 },
+        { "month": "2024-05", "pct_completion": 42 }
+      ]
+    },
+    "site_006": {
+      "name": "Noida Data Center",
+      "state": "Delhi NCR",
+      "lat": 28.5355,
+      "lng": 77.3910,
+      "monthly_progress": [
+        { "month": "2024-01", "pct_completion": 4 },
+        { "month": "2024-02", "pct_completion": 9 },
+        { "month": "2024-03", "pct_completion": 14 },
+        { "month": "2024-04", "pct_completion": 20 },
+        { "month": "2024-05", "pct_completion": 26 }
+      ]
+    },
+    "comp_001": {
+      "name": "Reliance Logistics Pune",
+      "state": "Maharashtra",
+      "lat": 18.5500,
+      "lng": 73.8000,
+      "monthly_progress": [
+        { "month": "2024-01", "pct_completion": 20 },
+        { "month": "2024-02", "pct_completion": 30 },
+        { "month": "2024-03", "pct_completion": 45 },
+        { "month": "2024-04", "pct_completion": 60 },
+        { "month": "2024-05", "pct_completion": 75 }
+      ]
+    },
+    "comp_002": {
+      "name": "Adani Tech Park Mumbai",
+      "state": "Maharashtra",
+      "lat": 19.1000,
+      "lng": 72.9000,
+      "monthly_progress": [
+        { "month": "2024-01", "pct_completion": 5 },
+        { "month": "2024-02", "pct_completion": 12 },
+        { "month": "2024-03", "pct_completion": 25 },
+        { "month": "2024-04", "pct_completion": 40 },
+        { "month": "2024-05", "pct_completion": 55 }
+      ]
+    },
+    "comp_003": {
+      "name": "DLF Cyber City Bengaluru",
+      "state": "Karnataka",
+      "lat": 12.9500,
+      "lng": 77.6500,
+      "monthly_progress": [
+        { "month": "2024-01", "pct_completion": 15 },
+        { "month": "2024-02", "pct_completion": 25 },
+        { "month": "2024-03", "pct_completion": 40 },
+        { "month": "2024-04", "pct_completion": 55 },
+        { "month": "2024-05", "pct_completion": 70 }
+      ]
+    }
+  }
+}

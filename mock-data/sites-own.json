@@ -1,0 +1,98 @@
+[
+  {
+    "id": "site_001",
+    "name": "Pune Logistics Hub",
+    "type": "own",
+    "portfolio_id": "port_mh",
+    "state": "Maharashtra",
+    "city": "Pune",
+    "lat": 18.5204,
+    "lng": 73.8567,
+    "status": "Monitoring Active",
+    "last_updated": "2024-05-10"
+  },
+  {
+    "id": "site_002",
+    "name": "Mumbai Tech Park",
+    "type": "own",
+    "portfolio_id": "port_mh",
+    "state": "Maharashtra",
+    "city": "Mumbai",
+    "lat": 19.0760,
+    "lng": 72.8777,
+    "status": "Monitoring Active",
+    "last_updated": "2024-05-08"
+  },
+  {
+    "id": "site_003",
+    "name": "Bengaluru East Campus",
+    "type": "own",
+    "portfolio_id": "port_ka",
+    "state": "Karnataka",
+    "city": "Bengaluru",
+    "lat": 12.9716,
+    "lng": 77.5946,
+    "status": "Analysis Pending",
+    "last_updated": "2024-05-09"
+  },
+  {
+    "id": "site_004",
+    "name": "Mysuru Warehousing",
+    "type": "own",
+    "portfolio_id": "port_ka",
+    "state": "Karnataka",
+    "city": "Mysuru",
+    "lat": 12.2958,
+    "lng": 76.6394,
+    "status": "Monitoring Active",
+    "last_updated": "2024-05-07"
+  },
+  {
+    "id": "site_005",
+    "name": "Gurugram Retail Plaza",
+    "type": "own",
+    "portfolio_id": "port_dl",
+    "state": "Delhi NCR",
+    "city": "Gurugram",
+    "lat": 28.4595,
+    "lng": 77.0266,
+    "status": "Monitoring Active",
+    "last_updated": "2024-05-06"
+  },
+  {
+    "id": "site_006",
+    "name": "Noida Data Center",
+    "type": "own",
+    "portfolio_id": "port_dl",
+    "state": "Delhi NCR",
+    "city": "Noida",
+    "lat": 28.5355,
+    "lng": 77.3910,
+    "status": "Stale",
+    "last_updated": "2024-04-20"
+  },
+  {
+    "id": "site_007",
+    "name": "Kolkata Riverside Apts",
+    "type": "own",
+    "portfolio_id": "port_wb",
+    "state": "West Bengal",
+    "city": "Kolkata",
+    "lat": 22.5726,
+    "lng": 88.3639,
+    "status": "Monitoring Active",
+    "last_updated": "2024-05-05"
+  },
+  {
+    "id": "site_008",
+    "name": "Haldia Industrial Zone",
+    "type": "own",
+    "portfolio_id": "port_wb",
+    "state": "West Bengal",
+    "city": "Haldia",
+    "lat": 22.0667,
+    "lng": 88.0667,
+    "status": "Analysis Pending",
+    "last_updated": "2024-05-04"
+  }
+]

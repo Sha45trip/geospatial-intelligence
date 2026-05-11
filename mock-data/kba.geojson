@@ -1,0 +1,21 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": { "name": "Western Ghats Central", "category": "KBA" },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[74.00, 15.00], [74.50, 15.00], [74.50, 16.00], [74.00, 16.00], [74.00, 15.00]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "Aravalli Hills Corridor", "category": "KBA" },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[77.00, 28.30], [77.10, 28.30], [77.10, 28.60], [77.00, 28.60], [77.00, 28.30]]]
+      }
+    }
+  ]
+}

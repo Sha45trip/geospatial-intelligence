@@ -1,0 +1,21 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": { "name": "NH-48", "category": "Highway" },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [[72.80, 19.00], [73.80, 18.50], [77.50, 13.00]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "Yamuna Expressway", "category": "Expressway" },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [[77.40, 28.50], [77.70, 27.50], [78.00, 27.20]]
+      }
+    }
+  ]
+}

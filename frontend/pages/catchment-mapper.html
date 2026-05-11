@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Catchment Mapper | Prudent Geospatial</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="../styles/tokens.css">
+  <link rel="stylesheet" href="../styles/main.css">
+  <style>
+    body { overflow: hidden; }
+    #main-content { flex:1; display:flex; flex-direction:column; overflow:hidden; }
+    .ctrl-bar {
+      background:white; border-bottom:1px solid rgba(168,85,247,.15);
+      padding:14px 24px; display:flex; align-items:center; gap:16px; flex-shrink:0;
+    }
+    .ctrl-label { font-size:.65rem; font-weight:700; text-transform:uppercase; letter-spacing:.07em; color:#7c3aed; display:block; margin-bottom:4px; }
+    .ctrl-select {
+      appearance:none; border:1px solid rgba(168,85,247,.35); border-radius:8px;
+      padding:7px 32px 7px 12px; font-size:.875rem; color:#111827;
+      background:white url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%239333ea' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") no-repeat right 10px center;
+      min-width:200px; font-family:'Inter',sans-serif; cursor:pointer;
+    }
+    .ctrl-select:focus { outline:none; border-color:#9333ea; }
+    .radius-label { font-size:.65rem; font-weight:700; text-transform:uppercase; color:#7c3aed; margin-bottom:4px; display:block; }
+    .radius-row { display:flex; gap:6px; }
+    .radius-btn {
+      padding:6px 12px; border:1px solid rgba(168,85,247,.3); border-radius:6px;
+      font-size:.8rem; font-weight:600; cursor:pointer; background:white; color:#6b7280;
+    }
+    .radius-btn.active { background:#9333ea; color:white; border-color:#9333ea; }
+
+    .map-col { flex:1; position:relative; }
+    #catchment-map { height:100%; width:100%; }
+
+    .results-drawer {
+      position:absolute; top:20px; right:20px; width:360px; max-height:calc(100% - 40px);
+      background:white; border-radius:12px; box-shadow:0 10px 25px rgba(0,0,0,.1);
+      z-index:1000; display:flex; flex-direction:column; overflow:hidden;
+      border:1px solid rgba(168,85,247,.15); transition:transform .3s ease;
+    }
+    .results-drawer.hidden { transform:translateX(400px); }
+    .drawer-header { padding:14px 20px; border-bottom:1px solid rgba(168,85,247,.1); display:flex; justify-content:space-between; align-items:center; }
+    .drawer-body { padding:20px; overflow-y:auto; }
+    .res-table { width:100%; border-collapse:collapse; font-size:.85rem; }
+    .res-table th { text-align:left; color:#7c3aed; font-size:.65rem; text-transform:uppercase; padding-bottom:8px; }
+    .res-table td { padding:8px 0; border-bottom:1px solid rgba(168,85,247,.05); }
+
+    .map-loader {
+      position:absolute; inset:0; z-index:2000; background:rgba(255,255,255,.8);
+      display:none; align-items:center; justify-content:center; flex-direction:column; gap:12px;
+    }
+    .spinner { width:32px; height:32px; border:3px solid #f3e8ff; border-top-color:#9333ea; border-radius:50%; animation:spin .8s linear infinite; }
+    @keyframes spin { to { transform:rotate(360deg); } }
+  </style>
+</head>
+<body>
+<div id="app-container">
+  <aside id="sidebar"></aside>
+  <div id="main-wrapper">
+    <nav id="navbar"></nav>
+    <div id="main-content">
+      <div class="ctrl-bar">
+        <div>
+          <span class="ctrl-label">Select Site</span>
+          <select class="ctrl-select" id="site-select"><option value="">Select a site…</option></select>
+        </div>
+        <div>
+          <span class="radius-label">Catchment Radius</span>
+          <div class="radius-row">
+            <button class="radius-btn" onclick="setRadius(1,this)">1 km</button>
+            <button class="radius-btn" onclick="setRadius(2,this)">2 km</button>
+            <button class="radius-btn active" onclick="setRadius(5,this)">5 km</button>
+            <button class="radius-btn" onclick="setRadius(10,this)">10 km</button>
+          </div>
+        </div>
+        <button class="btn btn-primary" id="btn-analyse" onclick="runAnalysis()" style="margin-left:auto;" disabled>
+          <i data-lucide="play" style="width:16px;height:16px;"></i> Analyse Catchment
+        </button>
+      </div>
+
+      <div class="map-col">
+        <div id="catchment-map"></div>
+        
+        <div class="results-drawer hidden" id="results-drawer">
+          <div class="drawer-header">
+            <span style="font-weight:700;color:#1e1b4b;font-size:.9rem;" id="drawer-label">Catchment Results</span>
+            <button onclick="document.getElementById('results-drawer').classList.add('hidden')" style="border:none;background:none;cursor:pointer;color:#9ca3af;">
+              <i data-lucide="x" style="width:18px;height:18px;"></i>
+            </button>
+          </div>
+          <div class="drawer-body">
+            <table class="res-table">
+              <thead><tr><th>Category</th><th>Count</th><th>Nearest</th><th>Dist</th></tr></thead>
+              <tbody id="results-body"></tbody>
+            </table>
+            
+            <div style="margin-top:24px; padding-top:16px; border-top:1px solid rgba(168,85,247,.12);">
+              <div style="font-size:.7rem; font-weight:700; text-transform:uppercase; color:#7c3aed; margin-bottom:12px;">POI Distribution</div>
+              <div style="height:160px; position:relative;">
+                <canvas id="poiChart"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="map-loader" id="map-loader">
+          <div class="spinner"></div>
+          <div style="font-size:.9rem;font-weight:600;color:#1e1b4b;">Processing catchment data…</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="../components/navbar.js"></script>
+<script src="../components/sidebar.js"></script>
+<script src="../components/mock-data.js"></script>
+<script src="../components/map-panel.js"></script>
+<script src="../components/toast.js"></script>
+<script>
+  let cMap, lyrGroups = {}, activeSiteId = null, activeRadius = 5, allPoiData = null;
+
+  function initMap() {
+    cMap = L.map('catchment-map', { zoomControl: false, attributionControl: true }).setView([20.5937,78.9629],5);
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+      attribution:'&copy; OpenStreetMap &copy; CARTO', subdomains:'abcd', maxZoom:20
+    }).addTo(cMap);
+    L.control.zoom({ position:'bottomright' }).addTo(cMap);
+    ['sites','highways','competitors','malls','substations','buffer'].forEach(k => {
+      lyrGroups[k] = L.layerGroup().addTo(cMap);
+    });
+  }
+
+  function setRadius(km, btn) {
+    activeRadius = km;
+    document.querySelectorAll('.radius-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+
+  async function loadData() {
+    let own, comp, poi;
+    try {
+      const [ownRes, compRes, poiRes] = await Promise.all([
+        fetch('../../mock-data/sites-own.json'),
+        fetch('../../mock-data/sites-competitor.json'),
+        fetch('../../mock-data/catchment-poi.json')
+      ]);
+      own = await ownRes.json();
+      comp = await compRes.json();
+      poi = await poiRes.json();
+    } catch (e) {
+      console.warn("Fetch failed, using fallback data", e);
+      own = window.GEO_MOCK_SITES_OWN;
+      comp = window.GEO_MOCK_SITES_COMP;
+      poi = window.GEO_MOCK_POI;
+    }
+    
+    const sites = [...own, ...comp];
+    allPoiData = poi;
+      
+      const sel = document.getElementById('site-select');
+      sites.forEach(s => {
+        const o = document.createElement('option'); o.value = s.id; o.textContent = s.name; sel.appendChild(o);
+        L.circleMarker([s.lat,s.lng],{radius:8,fillColor:'#9333ea',color:'#fff',weight:2,opacity:1,fillOpacity:.75})
+          .addTo(lyrGroups.sites)
+          .on('click',() => { sel.value = s.id; selectSite(s.id); });
+      });
+
+      const urlSite = new URLSearchParams(window.location.search).get('site');
+      const targetId = urlSite || (sites.length > 0 ? sites[0].id : null);
+      if (targetId) { 
+        sel.value = targetId; 
+        selectSite(targetId);
+        runAnalysis();
+      }
+    } catch(e) { console.error(e); }
+  }
+
+  function selectSite(id) {
+    activeSiteId = id;
+    document.getElementById('btn-analyse').disabled = false;
+  }
+
+  async function runAnalysis() {
+    if (!activeSiteId) return;
+    document.getElementById('map-loader').style.display = 'flex';
+    await new Promise(r => setTimeout(r, 800));
+
+    try {
+      const sites = await (await fetch('../../mock-data/sites-own.json')).json();
+      const site = sites.find(s => s.id === activeSiteId);
+      const catchment = allPoiData[activeSiteId] || {};
+
+      document.getElementById('map-loader').style.display = 'none';
+      document.getElementById('results-drawer').classList.remove('hidden');
+      document.getElementById('drawer-label').textContent = `Analysis — ${site.name}`;
+
+      Object.values(lyrGroups).forEach(lg => lg.clearLayers());
+      
+      L.marker([site.lat,site.lng], {
+        icon: L.divIcon({ className:'', html:`<div style="width:24px;height:24px;background:#10b981;border:3px solid white;border-radius:50%;box-shadow:0 2px 8px rgba(0,0,0,.3);"></div>`, iconSize:[24,24], iconAnchor:[12,12] })
+      }).addTo(lyrGroups.sites);
+
+      L.circle([site.lat,site.lng], { radius:activeRadius*1000, color:'#9333ea', weight:2, dashArray:'6,10', fillOpacity:.05 }).addTo(lyrGroups.buffer);
+      cMap.setView([site.lat, site.lng], 13);
+
+      renderResultsTable(catchment);
+      renderPoiChart(catchment);
+      
+      // Plot POIs
+      const add = (list, lyr, color) => {
+        if(!list) return;
+        list.forEach(p => L.circleMarker([p.lat,p.lng],{radius:6,fillColor:color,color:'#fff',weight:1.5,fillOpacity:.8}).bindPopup(p.name).addTo(lyrGroups[lyr]));
+      };
+      add(catchment.highways, 'highways', '#3b82f6');
+      add(catchment.competitors, 'competitors', '#ef4444');
+      add(catchment.malls, 'malls', '#f59e0b');
+      add(catchment.substations, 'substations', '#10b981');
+
+      if (typeof lucide !== 'undefined') lucide.createIcons();
+    } catch(e) { console.error(e); }
+  }
+
+  function renderResultsTable(data) {
+    const tbody = document.getElementById('results-body');
+    const rows = [
+      { label:'Highways', key:'highways', color:'#3b82f6' },
+      { label:'Competitors', key:'competitors', color:'#ef4444' },
+      { label:'Malls', key:'malls', color:'#f59e0b' },
+      { label:'Substations', key:'substations', color:'#10b981' }
+    ];
+    tbody.innerHTML = rows.map(r => {
+      const list = data[r.key] || [];
+      const nearest = list.length ? list.reduce((a,b)=>a.distance_km < b.distance_km ? a : b) : null;
+      return `<tr>
+        <td><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${r.color};margin-right:6px;"></span>${r.label}</td>
+        <td><b>${list.length}</b></td>
+        <td style="font-size:.75rem;">${nearest ? nearest.name : '—'}</td>
+        <td style="font-size:.75rem;">${nearest ? nearest.distance_km+'km' : '—'}</td>
+      </tr>`;
+    }).join('');
+  }
+
+  let poiChart = null;
+  function renderPoiChart(data) {
+    const ctx = document.getElementById('poiChart').getContext('2d');
+    if (poiChart) poiChart.destroy();
+    poiChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ['Highways', 'Competitors', 'Malls', 'Substations'],
+        datasets: [{
+          data: [(data.highways||[]).length, (data.competitors||[]).length, (data.malls||[]).length, (data.substations||[]).length],
+          backgroundColor: ['#3b82f6', '#ef4444', '#f59e0b', '#10b981'],
+          borderRadius: 6
+        }]
+      },
+      options: {
+        indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: { x: { display: false }, y: { grid: { display: false }, ticks: { font: { size: 11, weight: 600 } } } }
+      }
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', () => { initMap(); loadData(); });
+</script>
+</body>
+</html>

@@ -1,0 +1,55 @@
+:root {
+  /* — Color Palette (Derived from new-dev-pcrtool-frontend Light Theme) — */
+  --color-bg-primary: #ffffff;
+  --color-bg-secondary: #fdfbff;       /* Light purple tint */
+  --color-bg-elevated: #f3e8ff;        /* purple-100 */
+  --color-border: rgba(168, 85, 247, 0.2); /* purple-200/50 */
+  --color-border-active: #9333ea;      /* purple-600 */
+
+  --color-accent-primary: #9333ea;      /* purple-600 */
+  --color-accent-primary-hover: #7e22ce;
+  --color-accent-success: #10b981;
+  --color-accent-warning: #f59e0b;
+  --color-accent-danger: #ef4444;
+  --color-accent-eco: #059669;
+  --color-accent-eco-light: #34d399;
+
+  --color-text-primary: #1e1b4b;       /* Dark indigo/purple */
+  --color-text-secondary: #6b7280;     /* Gray-500 */
+  --color-text-disabled: #9ca3af;
+
+  /* — Typography — */
+  --font-display: 'Inter', sans-serif;
+  --font-body: 'Inter', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  /* — Spacing Scale — */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 40px;
+  --space-2xl: 64px;
+
+  /* — Radius — */
+  --radius-sm: 0.125rem;
+  --radius-md: 0.375rem;
+  --radius-lg: 0.5rem;
+  --radius-pill: 9999px;
+
+  /* — Shadows — */
+  --shadow-card: 0 1px 3px rgba(0,0,0,0.1), 0 0 0 1px var(--color-border);
+  --shadow-elevated: 0 10px 30px rgba(168, 85, 247, 0.1);
+
+  /* — Map layer colors — */
+  --layer-protected: #059669;
+  --layer-ramsar: #2563eb;
+  --layer-kba: #7c3aed;
+  --layer-heritage: #d97706;
+  --layer-river: #3b82f6;
+  --layer-highway: #dc2626;
+  --layer-mall: #ea580c;
+  --layer-airport: #0ea5e9;
+  --layer-competitor: #ef4444;
+  --layer-own-site: #10b981;
+}
