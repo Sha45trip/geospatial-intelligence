@@ -131,3 +131,55 @@ window.GEO_MOCK_POI = {
     "substations": [ { "name": "CESC Central Station", "lat": 22.56, "lng": 88.38, "distance_km": 2.0 } ]
   }
 };
+
+window.GEO_MOCK_HIGHWAYS = {
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": { "name": "NH-48", "category": "Highway" },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [[72.80, 19.00], [73.80, 18.50], [77.50, 13.00]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "Yamuna Expressway", "category": "Expressway" },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [[77.40, 28.50], [77.70, 27.50], [78.00, 27.20]]
+      }
+    }
+  ]
+};
+
+window.GEO_MOCK_RIVERS = {
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": { "name": "Mula-Mutha River", "category": "River" },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [[73.75, 18.55], [73.85, 18.52], [73.95, 18.50]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "Yamuna River (Delhi)", "category": "River" },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [[77.20, 28.75], [77.25, 28.60], [77.30, 28.45]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "Hooghly River", "category": "River" },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [[88.30, 22.70], [88.33, 22.57], [88.35, 22.45]]
+      }
+    }
+  ]
+};

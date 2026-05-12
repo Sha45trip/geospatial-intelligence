@@ -17,10 +17,10 @@
     #main-content { flex:1; display:flex; flex-direction:column; overflow:hidden; }
     .bio-body { flex: 1; display: grid; grid-template-columns: 320px 1fr 340px; overflow: hidden; }
     
-    .wizard-panel { background: white; border-right: 1px solid rgba(168,85,247,.12); display: flex; flex-direction: column; overflow-y: auto; }
-    .wizard-header { padding: 16px 20px; border-bottom: 1px solid rgba(168,85,247,.12); }
+    .wizard-panel { background: white; border-right: 1px solid rgba(168,85,247,.12); display: flex; flex-direction: column; overflow: hidden; }
+    .wizard-header { padding: 16px 20px; border-bottom: 1px solid rgba(168,85,247,.12); flex-shrink: 0; }
     .wizard-title { font-size: 1rem; font-weight: 700; color: #1e1b4b; }
-    .wizard-body { padding: 20px; flex: 1; display: flex; flex-direction: column; gap: 20px; }
+    .wizard-body { padding: 20px; flex: 1; display: flex; flex-direction: column; gap: 20px; overflow-y: auto; }
     .step-label { font-size: .65rem; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: #7c3aed; margin-bottom: 8px; }
     .coord-input { border: 1px solid rgba(168,85,247,.3); border-radius: 8px; padding: 8px 12px; font-size: .85rem; font-family: 'JetBrains Mono', monospace; width: 100%; }
     .pill-row { display: flex; flex-wrap: wrap; gap: 6px; }
@@ -38,14 +38,28 @@
     .spinner { width: 32px; height: 32px; border: 3px solid #f3e8ff; border-top-color: #9333ea; border-radius: 50%; animation: spin .8s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    .results-panel { background: white; border-left: 1px solid rgba(168,85,247,.12); display: flex; flex-direction: column; }
-    .results-header { padding: 16px 20px; border-bottom: 1px solid rgba(168,85,247,.12); }
+    .results-panel { background: white; border-left: 1px solid rgba(168,85,247,.12); display: flex; flex-direction: column; overflow: hidden; }
+    .results-header { padding: 16px 20px; border-bottom: 1px solid rgba(168,85,247,.12); flex-shrink: 0; }
     .results-body { flex: 1; overflow-y: auto; padding: 20px; }
     .result-item { display: flex; gap: 12px; padding: 12px 0; border-bottom: 1px solid rgba(168,85,247,.08); }
     .result-icon { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
     .result-badge { display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; border-radius: 999px; font-size: .7rem; font-weight: 600; margin-top: 4px; }
     .rb-risk { background: #fee2e2; color: #dc2626; }
     .rb-clear { background: #d1fae5; color: #059669; }
+
+    .poi-tooltip {
+      background: white; border: 1px solid rgba(0,0,0,0.1); border-radius: 4px;
+      font-weight: 600; color: #1e1b4b; box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      font-family: 'Inter', sans-serif; padding: 4px 8px;
+    }
+    .highway-callout {
+      background: black !important; color: white !important;
+      border: 1px solid white !important; border-radius: 0 !important; font-size: 0.75rem;
+    }
+    .site-callout {
+      background: #e11d48 !important; color: white !important;
+      border: 1px solid white !important; border-radius: 0 !important; font-size: 0.75rem;
+    }
   </style>
 </head>
 <body>
@@ -91,11 +105,12 @@
 <script src="../components/toast.js"></script>
 <script>
   let bioMap, bioLayers = {}, activeRadius = 10, activeQuery = 'A', sensitivityChart = null;
+  let cachedGeoJSON = {};
 
   function initMap() {
     bioMap = L.map('bio-map',{zoomControl:false,attributionControl:true}).setView([18.5204, 73.8567], 11);
     L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png').addTo(bioMap);
-    ['buffer','protected','ramsar','kba','heritage','rivers'].forEach(k => bioLayers[k] = L.layerGroup().addTo(bioMap));
+    ['buffer','protected','ramsar','kba','heritage','rivers','own_sites','competitor_sites','schedule_v','eco_sensitive'].forEach(k => bioLayers[k] = L.layerGroup().addTo(bioMap));
   }
 
   function setRadius(km,btn) { activeRadius = km; document.querySelectorAll('.pill').forEach(p=>p.classList.remove('active')); btn.classList.add('active'); }
@@ -108,17 +123,74 @@
 
     Object.values(bioLayers).forEach(l => l.clearLayers());
     L.circle([lat,lng],{radius:activeRadius*1000,color:'#9333ea',weight:2,dashArray:'5,10',fillOpacity:.05}).addTo(bioLayers.buffer);
-    L.marker([lat,lng],{icon:L.divIcon({className:'',html:`<div style="width:20px;height:20px;background:#9333ea;border:3px solid white;border-radius:50%;box-shadow:0 2px 8px rgba(0,0,0,.3);"></div>`})}).addTo(bioLayers.buffer);
+    const centerIconHtml = `<div style="width:20px;height:20px;background:#e11d48;border:3px solid white;border-radius:50%;box-shadow:0 2px 8px rgba(0,0,0,.3);"></div>`;
+    L.marker([lat,lng],{icon:L.divIcon({className:'',html:centerIconHtml})})
+      .bindTooltip("Selected Location", {permanent: true, direction: 'top', offset: [0, -10], className: 'poi-tooltip site-callout'})
+      .addTo(bioLayers.buffer);
 
     const datasets = [
       { key:'protected', label:'Protected Areas', color:'#059669', icon:'shield' },
       { key:'ramsar', label:'Ramsar Sites', color:'#2563eb', icon:'droplets' },
       { key:'kba', label:'KBA Zones', color:'#7c3aed', icon:'leaf' },
-      { key:'heritage', label:'Heritage Sites', color:'#d97706', icon:'landmark' }
+      { key:'heritage', label:'Heritage Sites', color:'#d97706', icon:'landmark' },
+      { key:'rivers', label:'Rivers & Water Bodies', color:'#3b82f6', icon:'waves' },
+      { key:'highways', label:'Highways & Expressways', color:'#1e293b', icon:'route' },
+      { key:'own_sites', label:'Own Sites', color:'#9333ea', icon:'home' },
+      { key:'competitor_sites', label:'Competitor Sites', color:'#ef4444', icon:'building' },
+      { key:'schedule_v', label:'Schedule V Areas', color:'#f59e0b', icon:'map' },
+      { key:'eco_sensitive', label:'Eco Sensitive Zones', color:'#10b981', icon:'tree-pine' }
     ];
 
     const results = datasets.map(d => {
       const hit = Math.random() > 0.4;
+      if (hit) {
+        // Draw mock shape
+        const offsetLat = lat + (Math.random() - 0.5) * (activeRadius / 111);
+        const offsetLng = lng + (Math.random() - 0.5) * (activeRadius / 111);
+        
+        if (d.key === 'rivers' || d.key === 'highways') {
+          const renderGeo = (data) => {
+            L.geoJSON(data, {
+              style: { color: d.key === 'highways' ? 'black' : d.color, weight: 4 },
+              onEachFeature: (feature, layer) => {
+                let tClass = 'poi-tooltip';
+                if (d.key === 'highways') tClass += ' highway-callout';
+                layer.bindTooltip(feature.properties.name || feature.properties.category || d.label, {permanent: true, direction: 'center', className: tClass});
+              }
+            }).addTo(bioLayers[d.key] || bioLayers.buffer);
+          };
+
+          if (!cachedGeoJSON[d.key]) {
+            fetch(`../../mock-data/${d.key}.geojson`).then(res => res.json()).then(data => {
+              cachedGeoJSON[d.key] = data;
+              renderGeo(data);
+            }).catch(e => {
+              console.warn("Could not load", d.key, "using fallback data");
+              cachedGeoJSON[d.key] = d.key === 'highways' ? window.GEO_MOCK_HIGHWAYS : window.GEO_MOCK_RIVERS;
+              renderGeo(cachedGeoJSON[d.key]);
+            });
+          } else {
+            renderGeo(cachedGeoJSON[d.key]);
+          }
+        } else if (d.key === 'own_sites' || d.key === 'competitor_sites') {
+          let tClass = 'poi-tooltip site-callout';
+          const iconColor = '#e11d48';
+          const iconHtml = `<div style="width:24px;height:24px;background:${iconColor};border:2px solid white;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 4px rgba(0,0,0,0.3);"><i data-lucide="${d.icon}" style="width:14px;height:14px;color:white;"></i></div>`;
+          L.marker([offsetLat, offsetLng], { icon: L.divIcon({ className: '', html: iconHtml, iconSize: [24,24], iconAnchor: [12,12] }) })
+            .bindTooltip(d.label, {permanent: true, direction: 'right', offset: [12, 0], className: tClass})
+            .addTo(bioLayers[d.key] || bioLayers.buffer);
+        } else {
+          const coords = [
+            [offsetLat, offsetLng],
+            [offsetLat + 0.02, offsetLng + 0.01],
+            [offsetLat + 0.01, offsetLng + 0.03],
+            [offsetLat - 0.01, offsetLng + 0.02]
+          ];
+          L.polygon(coords, { color: d.color, fillColor: d.color, fillOpacity: 0.3, weight: 2 })
+            .bindTooltip(d.label, {permanent: true, direction: 'center', className: 'poi-tooltip'})
+            .addTo(bioLayers[d.key] || bioLayers.buffer);
+        }
+      }
       return { ...d, hit, score: hit ? Math.floor(Math.random()*40)+60 : Math.floor(Math.random()*30) };
     });
 

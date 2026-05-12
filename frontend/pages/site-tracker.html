@@ -60,6 +60,31 @@
     .counter::after {
       content: counter(num) "%";
     }
+
+    .poi-tooltip {
+      background: white;
+      border: 1px solid rgba(0,0,0,0.1);
+      border-radius: 4px;
+      font-weight: 600;
+      color: #1e1b4b;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      font-family: 'Inter', sans-serif;
+      padding: 4px 8px;
+    }
+    .highway-callout {
+      background: black !important;
+      color: white !important;
+      border: 1px solid white !important;
+      border-radius: 0 !important;
+      font-size: 0.75rem;
+    }
+    .site-callout {
+      background: #e11d48 !important;
+      color: white !important;
+      border: 1px solid white !important;
+      border-radius: 0 !important;
+      font-size: 0.75rem;
+    }
   </style>
 </head>
 <body>
@@ -192,11 +217,12 @@
 <script src="../components/map-panel.js"></script>
 <script src="../components/toast.js"></script>
 <script>
-  let trackerMap, siteLayer, progressChart, allSiteData, allSites = [], portfolioData = [];
+  let trackerMap, siteLayer, infraLayer, progressChart, allSiteData, allSites = [], portfolioData = [];
 
   function initMap() {
     trackerMap = L.map('tracker-map', { zoomControl: false, attributionControl: true }).setView([20.5937, 78.9629], 5);
     L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png').addTo(trackerMap);
+    infraLayer = L.layerGroup().addTo(trackerMap);
     siteLayer = L.layerGroup().addTo(trackerMap);
   }
 
@@ -230,6 +256,28 @@
 
       populateSiteSelect(allSites);
 
+      const loadGeoLayer = async (key, color, isHighway) => {
+        let data;
+        try {
+          const res = await fetch(`../../mock-data/${key}.geojson`);
+          data = await res.json();
+        } catch(e) {
+          data = isHighway ? window.GEO_MOCK_HIGHWAYS : window.GEO_MOCK_RIVERS;
+        }
+        if (data) {
+          L.geoJSON(data, {
+            style: { color: color, weight: 4 },
+            onEachFeature: (feature, layer) => {
+              let tClass = 'poi-tooltip';
+              if (isHighway) tClass += ' highway-callout';
+              layer.bindTooltip(feature.properties.name || feature.properties.category || key, {permanent: true, direction: 'center', className: tClass});
+            }
+          }).addTo(infraLayer);
+        }
+      };
+      loadGeoLayer('highways', 'black', true);
+      loadGeoLayer('rivers', '#3b82f6', false);
+
       const urlId = new URLSearchParams(window.location.search).get('site');
       const targetId = urlId || (allSites.length > 0 ? allSites[0].id : null);
       if (targetId) { 
@@ -246,7 +294,9 @@
     sites.forEach(s => {
       const opt = document.createElement('option'); opt.value = s.id; opt.textContent = s.name;
       sel.appendChild(opt);
-      L.circleMarker([s.lat, s.lng], { radius:8, fillColor:'#9333ea', color:'#fff', weight:2, opacity:1, fillOpacity:.75 })
+      const iconHtml = `<div style="width:16px;height:16px;background:#e11d48;border:2px solid white;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,.3);"></div>`;
+      L.marker([s.lat, s.lng], { icon: L.divIcon({ className: '', html: iconHtml, iconSize: [16,16], iconAnchor: [8,8] }) })
+        .bindTooltip(s.name, {permanent: true, direction: 'right', offset: [8, 0], className: 'poi-tooltip site-callout'})
         .addTo(siteLayer).on('click', () => { sel.value = s.id; loadSite(s.id); });
     });
   }
@@ -272,9 +322,12 @@
 
     trackerMap.setView([site.lat, site.lng], 14);
     siteLayer.clearLayers();
+    const iconHtml = `<div style="width:24px;height:24px;background:#e11d48;border:3px solid white;border-radius:50%;box-shadow:0 2px 8px rgba(0,0,0,0.3);"></div>`;
     L.marker([site.lat, site.lng], {
-      icon: L.divIcon({ className:'', html:`<div style="width:24px;height:24px;background:#9333ea;border:3px solid white;border-radius:50%;box-shadow:0 2px 8px rgba(0,0,0,0.3);"></div>`, iconSize:[24,24], iconAnchor:[12,12] })
-    }).addTo(siteLayer);
+      icon: L.divIcon({ className:'', html: iconHtml, iconSize:[24,24], iconAnchor:[12,12] })
+    })
+    .bindTooltip(site.name, {permanent: true, direction: 'top', offset: [0, -12], className: 'poi-tooltip site-callout'})
+    .addTo(siteLayer);
     L.circle([site.lat, site.lng], { radius:10000, color:'#9333ea', weight:1.5, dashArray:'6,10', fillOpacity:0.05 }).addTo(siteLayer);
 
     const prog = site.monthly_progress || [];
