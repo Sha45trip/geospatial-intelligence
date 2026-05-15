@@ -5,6 +5,19 @@
       "state": "Maharashtra",
       "lat": 18.5204,
       "lng": 73.8567,
+      "analysis": {
+        "insights": "📡 SAR Coherence Analysis reveals a 15.3% acceleration in construction pace over Q2 2024, placing the project 8 days ahead of the revised schedule. Foundation work is 100% complete with load-bearing tests passed (verified via InSAR deformation maps). Superstructure phase is at 45% — steel erection for Block A is complete while Block B framing is at 62%.\n\n🌿 NDVI vegetation index dropped from 0.72→0.31 across the 4.2-hectare footprint, confirming full land conversion. Perimeter buffer zone vegetation remains healthy (NDVI 0.68), meeting the Environmental Clearance conditions.\n\n⚠️ Risk Alert: Sentinel-1 detected a 12mm ground subsidence near the NW corner over the last 30 days. Recommend geotechnical re-assessment before vertical expansion of Block C.\n\n📊 Compared to the competitor site (Reliance Logistics, 3.2km NE), this project is progressing 22% slower but with higher structural compliance scores.",
+        "milestones": [
+          { "name": "Site Clearing & Grading", "status": "Completed", "date": "Oct 2023" },
+          { "name": "Excavation & Piling", "status": "Completed", "date": "Dec 2023" },
+          { "name": "Foundation (RCC)", "status": "Completed", "date": "Jan 2024" },
+          { "name": "Foundation Load Test", "status": "Completed", "date": "Feb 2024" },
+          { "name": "Superstructure — Block A", "status": "Completed", "date": "Apr 2024" },
+          { "name": "Superstructure — Block B", "status": "In Progress", "date": "Est. Jul 2024" },
+          { "name": "Superstructure — Block C", "status": "In Progress", "date": "Est. Aug 2024" },
+          { "name": "Roofing & Waterproofing", "status": "In Progress", "date": "Est. Sep 2024" }
+        ]
+      },
       "monthly_progress": [
         { "month": "2024-01", "pct_completion": 5 },
         { "month": "2024-02", "pct_completion": 12 },
@@ -18,6 +31,18 @@
       "state": "Maharashtra",
       "lat": 19.0760,
       "lng": 72.8777,
+      "analysis": {
+        "insights": "📡 Multi-temporal SAR analysis indicates a slowdown in construction activity during Mar-Apr 2024, primarily attributed to pre-monsoon drainage infrastructure requirements. The 3-level basement is 100% complete; waterproofing membrane installation verified via high-resolution optical imagery.\n\n🏗️ Podium-level structural work is at 68% completion. Crane positioning analysis (shadow detection from Sentinel-2) confirms 3 active tower cranes on-site, up from 2 in the previous observation window.\n\n🌧️ Monsoon Risk: Historical rainfall data (IMD) for this micro-zone averages 2,400mm during Jun-Sep. Current drainage capacity is estimated at 1,800mm — a 25% deficit. Recommend accelerating stormwater management installation before June 15.\n\n💡 Opportunity: Adjacent land parcel (0.8 hectares, Plot 47-B) shows no activity since 2022. Potential acquisition target for Phase-2 expansion.",
+        "milestones": [
+          { "name": "Deep Piling (48m)", "status": "Completed", "date": "Nov 2023" },
+          { "name": "Basement Level 3", "status": "Completed", "date": "Jan 2024" },
+          { "name": "Basement Level 2", "status": "Completed", "date": "Feb 2024" },
+          { "name": "Basement Level 1", "status": "Completed", "date": "Mar 2024" },
+          { "name": "Podium Structure", "status": "In Progress", "date": "Est. Jul 2024" },
+          { "name": "Tower Core — T1", "status": "In Progress", "date": "Est. Oct 2024" },
+          { "name": "Interior Fit-outs", "status": "In Progress", "date": "Est. Jan 2025" }
+        ]
+      },
       "monthly_progress": [
         { "month": "2024-01", "pct_completion": 10 },
         { "month": "2024-02", "pct_completion": 15 },
@@ -31,6 +56,17 @@
       "state": "Karnataka",
       "lat": 12.9716,
       "lng": 77.5946,
+      "analysis": {
+        "insights": "📡 Sentinel-2 optical time-series shows active land preparation across the 6.1-hectare parcel. Topsoil stripping is 90% complete and earthmoving equipment count increased from 4 to 9 units between March and May observations.\n\n🌿 NDVI analysis indicates partial vegetation clearance (0.65→0.42) concentrated in the eastern sector. Western boundary retains native tree cover per the approved site plan.\n\n🏗️ Piling rigs detected in April imagery — deep foundation work has commenced. Estimated 120 bored piles required for the 5-story campus structure.\n\n📊 The site is located 1.5km from the Outer Ring Road (ORR), offering strong connectivity. Competitor DLF Cyber City (2.8km south) is at 70% completion — a significant lead in the Whitefield micro-market.",
+        "milestones": [
+          { "name": "Land Acquisition", "status": "Completed", "date": "Sep 2023" },
+          { "name": "Soil Testing & Survey", "status": "Completed", "date": "Nov 2023" },
+          { "name": "Topsoil Stripping", "status": "Completed", "date": "Feb 2024" },
+          { "name": "Earthwork & Grading", "status": "In Progress", "date": "Est. Jun 2024" },
+          { "name": "Piling (Bored Cast)", "status": "In Progress", "date": "Est. Aug 2024" },
+          { "name": "Foundation Raft", "status": "In Progress", "date": "Est. Nov 2024" }
+        ]
+      },
       "monthly_progress": [
         { "month": "2024-01", "pct_completion": 2 },
         { "month": "2024-02", "pct_completion": 8 },
@@ -44,6 +80,17 @@
       "state": "Karnataka",
       "lat": 12.2958,
       "lng": 76.6394,
+      "analysis": {
+        "insights": "📡 SAR backscatter analysis confirms steady construction activity at the 3.8-hectare warehousing site. Pre-engineered steel building (PEB) frame erection detected in May imagery — indicating transition from foundation to superstructure phase.\n\n🛣️ The site benefits from direct frontage on the new Bengaluru-Mysuru Expressway (NH-275), reducing transit time to Bengaluru to under 90 minutes. A 200m access road connecting the site to the expressway service lane was completed in March.\n\n🌊 Flood Risk: The site elevation is 762m AMSL, 18m above the nearest Cauvery River tributary. Historical flood analysis (1990-2024) shows zero inundation events — low hydrological risk.\n\n⚡ Power infrastructure: 33kV feeder line from Mysuru South Grid (2.2km) is confirmed operational. Dedicated transformer installation pending CESC approval.",
+        "milestones": [
+          { "name": "Land Leveling", "status": "Completed", "date": "Oct 2023" },
+          { "name": "Boundary Wall", "status": "Completed", "date": "Dec 2023" },
+          { "name": "Foundation Work", "status": "Completed", "date": "Feb 2024" },
+          { "name": "PEB Frame Erection", "status": "In Progress", "date": "Est. Jun 2024" },
+          { "name": "Roofing (Insulated Panels)", "status": "In Progress", "date": "Est. Aug 2024" },
+          { "name": "Floor Hardening (VDF)", "status": "In Progress", "date": "Est. Sep 2024" }
+        ]
+      },
       "monthly_progress": [
         { "month": "2024-01", "pct_completion": 8 },
         { "month": "2024-02", "pct_completion": 14 },
@@ -57,6 +104,18 @@
       "state": "Delhi NCR",
       "lat": 28.4595,
       "lng": 77.0266,
+      "analysis": {
+        "insights": "📡 High-resolution optical imagery (0.5m) confirms rapid vertical growth of the retail structure. The 4-story steel-concrete hybrid frame has reached Level 3 — ahead of the Q2 target by approximately 12 days.\n\n🛣️ Proximity Analysis: Direct access to Delhi-Jaipur Expressway (NH-48) via a 400m service road. The KMP Expressway interchange is 8km west, providing excellent freight connectivity to industrial hinterlands.\n\n🏪 Retail Catchment: Population density analysis (Census 2021 + satellite-derived built-up area) estimates 2.4 lakh residents within a 5km radius. Average household income in Sector 45-50 belt ranks in the top 8% nationally.\n\n⚠️ Construction Risk: PM2.5 levels at this location averaged 186 µg/m³ in the last 30 days (CPCB data), exceeding NAAQS standards. Dust suppression compliance may require additional investment of ₹8-12L.",
+        "milestones": [
+          { "name": "Demolition of Old Structure", "status": "Completed", "date": "Aug 2023" },
+          { "name": "Excavation & Shoring", "status": "Completed", "date": "Oct 2023" },
+          { "name": "Basement + Parking", "status": "Completed", "date": "Jan 2024" },
+          { "name": "Ground Floor Slab", "status": "Completed", "date": "Mar 2024" },
+          { "name": "Level 1-3 Structure", "status": "In Progress", "date": "Est. Jun 2024" },
+          { "name": "Facade & Glazing", "status": "In Progress", "date": "Est. Sep 2024" },
+          { "name": "MEP Fit-out", "status": "In Progress", "date": "Est. Nov 2024" }
+        ]
+      },
       "monthly_progress": [
         { "month": "2024-01", "pct_completion": 12 },
         { "month": "2024-02", "pct_completion": 19 },
@@ -70,6 +129,17 @@
       "state": "Delhi NCR",
       "lat": 28.5355,
       "lng": 77.3910,
+      "analysis": {
+        "insights": "📡 SAR analysis indicates slower-than-projected activity at this data center site. Backscatter intensity changes suggest only intermittent earthwork operations — potential regulatory or approval delays.\n\n⚠️ Status: This site is flagged as 'Stale' — no significant construction change detected in the last 21 days (based on Sentinel-1 12-day revisit comparisons).\n\n🔌 Critical Dependency: The 66kV power feed from NPCL is still pending commissioning. Data center operations require guaranteed dual-feed power supply. Current estimated energization: Q4 2024.\n\n📋 Regulatory: NOIDA Authority building plan approval for Phase-2 (additional 2,000 rack capacity) is under review. Expected clearance timeline: 45-60 days.",
+        "milestones": [
+          { "name": "Land Allotment", "status": "Completed", "date": "Jul 2023" },
+          { "name": "Soil Investigation", "status": "Completed", "date": "Sep 2023" },
+          { "name": "Foundation Design", "status": "Completed", "date": "Nov 2023" },
+          { "name": "Piling Work", "status": "In Progress", "date": "Est. Jul 2024" },
+          { "name": "Raft Foundation", "status": "In Progress", "date": "Est. Oct 2024" },
+          { "name": "Server Hall Structure", "status": "In Progress", "date": "Est. Feb 2025" }
+        ]
+      },
       "monthly_progress": [
         { "month": "2024-01", "pct_completion": 4 },
         { "month": "2024-02", "pct_completion": 9 },
@@ -83,6 +153,18 @@
       "state": "Maharashtra",
       "lat": 18.5500,
       "lng": 73.8000,
+      "analysis": {
+        "insights": "🔴 COMPETITOR ALERT: This site is exhibiting an aggressive 75% completion rate — significantly ahead of projections. Multi-temporal optical analysis reveals extensive use of pre-fabricated steel modules, reducing on-site construction time by an estimated 40%.\n\n📦 Warehouse footprint analysis indicates a total covered area of ~18,500 sqm across 2 buildings. Loading dock infrastructure (8 bays detected) suggests a high-throughput logistics operation targeting e-commerce fulfillment.\n\n🛣️ Proximity Analysis: The site is 0.8km from NH-48 with direct access via a newly constructed service road (first detected in Feb 2024 imagery). This gives it a 12-minute advantage over our Pune Hub for highway access.\n\n📈 At current pace, this competitor facility is projected to be operational by Aug 2024 — approximately 5 months before our Pune Logistics Hub reaches comparable readiness.",
+        "milestones": [
+          { "name": "Land Clearing", "status": "Completed", "date": "Oct 2023" },
+          { "name": "Pre-fab Module Delivery", "status": "Completed", "date": "Nov 2023" },
+          { "name": "Utility Hookup", "status": "Completed", "date": "Dec 2023" },
+          { "name": "Main Frame Assembly", "status": "Completed", "date": "Mar 2024" },
+          { "name": "Cladding & Roofing", "status": "Completed", "date": "Apr 2024" },
+          { "name": "Loading Dock Infra", "status": "In Progress", "date": "Est. Jun 2024" },
+          { "name": "Commissioning", "status": "In Progress", "date": "Est. Aug 2024" }
+        ]
+      },
       "monthly_progress": [
         { "month": "2024-01", "pct_completion": 20 },
         { "month": "2024-02", "pct_completion": 30 },
@@ -96,6 +178,16 @@
       "state": "Maharashtra",
       "lat": 19.1000,
       "lng": 72.9000,
+      "analysis": {
+        "insights": "🔴 COMPETITOR ALERT: Rapid development trajectory observed at this 4.5-hectare commercial tech park. Construction velocity increased 35% between Mar-May 2024, with 3 tower cranes now active.\n\n🏗️ Building footprint analysis from high-res imagery shows a twin-tower configuration with a shared podium. Estimated GFA: 42,000 sqm — positioning this as a direct competitor to our Mumbai Tech Park.\n\n📊 The site has a 15% completion advantage over our Mumbai Tech Park (55% vs 38%). If current trajectories hold, the competitor will reach shell completion ~4 months before us.",
+        "milestones": [
+          { "name": "Site Preparation", "status": "Completed", "date": "Sep 2023" },
+          { "name": "Deep Foundation", "status": "Completed", "date": "Dec 2023" },
+          { "name": "Podium Level", "status": "Completed", "date": "Mar 2024" },
+          { "name": "Tower Structure", "status": "In Progress", "date": "Est. Sep 2024" },
+          { "name": "Facade Installation", "status": "In Progress", "date": "Est. Dec 2024" }
+        ]
+      },
       "monthly_progress": [
         { "month": "2024-01", "pct_completion": 5 },
         { "month": "2024-02", "pct_completion": 12 },
@@ -109,6 +201,17 @@
       "state": "Karnataka",
       "lat": 12.9500,
       "lng": 77.6500,
+      "analysis": {
+        "insights": "🔴 COMPETITOR ALERT: DLF's Bengaluru campus is at 70% completion and accelerating. Multi-temporal analysis shows a consistent 10-12% monthly progress rate — the highest among all tracked competitor sites.\n\n🏢 Building typology: 3 interconnected IT blocks with a central atrium. Total built-up area estimated at 55,000 sqm. Parking structure (3 basements) appears 95% complete.\n\n🌿 Notably, DLF has retained 30% green cover on-site, including a 1.2-hectare landscaped buffer along the eastern boundary. This may indicate IGBC Platinum certification targeting.\n\n📊 This site directly competes with our Bengaluru East Campus, which is currently at only 29% completion — a 41 percentage point gap.",
+        "milestones": [
+          { "name": "Foundation Complete", "status": "Completed", "date": "Aug 2023" },
+          { "name": "Basement Parking", "status": "Completed", "date": "Nov 2023" },
+          { "name": "Structural Frame", "status": "Completed", "date": "Mar 2024" },
+          { "name": "Facade & Glazing", "status": "In Progress", "date": "Est. Jul 2024" },
+          { "name": "Interior Fit-out", "status": "In Progress", "date": "Est. Oct 2024" },
+          { "name": "Occupancy Certificate", "status": "In Progress", "date": "Est. Jan 2025" }
+        ]
+      },
       "monthly_progress": [
         { "month": "2024-01", "pct_completion": 15 },
         { "month": "2024-02", "pct_completion": 25 },

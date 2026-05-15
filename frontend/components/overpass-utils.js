@@ -101,57 +101,22 @@ async function renderInfrastructure(targetLayer, lat, lng, radius = 15000) {
   const renderGeo = (geojson, color, isHighway) => {
     if (!geojson || !geojson.features || geojson.features.length === 0) return;
 
-    // 1. Group features by name
-    const groups = {};
-    geojson.features.forEach(f => {
-      const name = f.properties.name || f.properties.ref || '';
-      if (!name || name === 'Unnamed') return; // skip unnamed segments
-      if (!groups[name]) groups[name] = [];
-      groups[name].push(f);
-    });
-
-    // Also render unnamed segments as plain lines (no label)
-    const unnamed = geojson.features.filter(f => {
-      const n = f.properties.name || f.properties.ref || '';
-      return !n || n === 'Unnamed';
-    });
-
-    // 2. Render ALL segments as plain styled lines (no per-segment tooltip)
+    // Render all segments as styled lines with hover tooltips
     L.geoJSON(geojson, {
       style: { color, weight: isHighway ? 4 : 3, opacity: 0.85 },
-      interactive: false // no click/hover needed for line segments
+      onEachFeature: (feature, layer) => {
+        const name = feature.properties.name || feature.properties.ref || '';
+        if (name && name !== 'Unnamed') {
+          const ref = feature.properties.ref ? ` (${feature.properties.ref})` : '';
+          const label = name + ref;
+          let tClass = 'poi-tooltip';
+          if (isHighway) tClass += ' highway-callout';
+          layer.bindTooltip(label, { permanent: false, direction: 'center', className: tClass });
+        }
+      }
     }).addTo(targetLayer);
 
-    // 3. For each unique road name, find the longest segment and add ONE permanent label at its midpoint
-    const labelledNames = new Set();
-    Object.entries(groups).forEach(([name, features]) => {
-      if (labelledNames.has(name)) return;
-      labelledNames.add(name);
-
-      // Find the segment with the most coordinates (longest)
-      let longest = features[0];
-      let maxLen = 0;
-      features.forEach(f => {
-        const len = f.geometry.coordinates.length;
-        if (len > maxLen) { maxLen = len; longest = f; }
-      });
-
-      // Get midpoint of the longest segment
-      const coords = longest.geometry.coordinates;
-      const mid = coords[Math.floor(coords.length / 2)];
-      const ref = longest.properties.ref ? ` (${longest.properties.ref})` : '';
-      const label = name + ref;
-
-      let tClass = 'poi-tooltip';
-      if (isHighway) tClass += ' highway-callout';
-
-      // Invisible marker just for the label
-      L.circleMarker([mid[1], mid[0]], { radius: 0, opacity: 0, fillOpacity: 0, interactive: false })
-        .bindTooltip(label, { permanent: true, direction: 'center', className: tClass })
-        .addTo(targetLayer);
-    });
-
-    console.log(`[Overpass] Rendered ${geojson.features.length} segments, ${labelledNames.size} unique labels`);
+    console.log(`[Overpass] Rendered ${geojson.features.length} segments`);
   };
 
   // Highways
