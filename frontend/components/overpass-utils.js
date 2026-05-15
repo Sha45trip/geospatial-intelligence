@@ -87,25 +87,71 @@ async function fetchOverpassGeoJSON(type, lat, lng, radius = 15000) {
  * Convenience: render highways + rivers on a Leaflet map for a given location.
  * Falls back to window.GEO_MOCK_HIGHWAYS / GEO_MOCK_RIVERS if Overpass is unavailable.
  *
+ * - Merges OSM segments by road name to avoid thousands of duplicate labels.
+ * - Renders ALL segments as plain styled lines (no tooltips).
+ * - Adds ONE permanent callout per unique road name at the midpoint of its longest segment.
+ *
  * @param {L.LayerGroup} targetLayer – Leaflet layer group to add features to
  * @param {number} lat
  * @param {number} lng
  * @param {number} [radius=15000]
  */
 async function renderInfrastructure(targetLayer, lat, lng, radius = 15000) {
+
   const renderGeo = (geojson, color, isHighway) => {
     if (!geojson || !geojson.features || geojson.features.length === 0) return;
+
+    // 1. Group features by name
+    const groups = {};
+    geojson.features.forEach(f => {
+      const name = f.properties.name || f.properties.ref || '';
+      if (!name || name === 'Unnamed') return; // skip unnamed segments
+      if (!groups[name]) groups[name] = [];
+      groups[name].push(f);
+    });
+
+    // Also render unnamed segments as plain lines (no label)
+    const unnamed = geojson.features.filter(f => {
+      const n = f.properties.name || f.properties.ref || '';
+      return !n || n === 'Unnamed';
+    });
+
+    // 2. Render ALL segments as plain styled lines (no per-segment tooltip)
     L.geoJSON(geojson, {
       style: { color, weight: isHighway ? 4 : 3, opacity: 0.85 },
-      onEachFeature: (feature, layer) => {
-        const name = feature.properties.name || feature.properties.category || '';
-        const ref = feature.properties.ref ? ` (${feature.properties.ref})` : '';
-        const label = name + ref;
-        let tClass = 'poi-tooltip';
-        if (isHighway) tClass += ' highway-callout';
-        layer.bindTooltip(label, { permanent: true, direction: 'center', className: tClass });
-      }
+      interactive: false // no click/hover needed for line segments
     }).addTo(targetLayer);
+
+    // 3. For each unique road name, find the longest segment and add ONE permanent label at its midpoint
+    const labelledNames = new Set();
+    Object.entries(groups).forEach(([name, features]) => {
+      if (labelledNames.has(name)) return;
+      labelledNames.add(name);
+
+      // Find the segment with the most coordinates (longest)
+      let longest = features[0];
+      let maxLen = 0;
+      features.forEach(f => {
+        const len = f.geometry.coordinates.length;
+        if (len > maxLen) { maxLen = len; longest = f; }
+      });
+
+      // Get midpoint of the longest segment
+      const coords = longest.geometry.coordinates;
+      const mid = coords[Math.floor(coords.length / 2)];
+      const ref = longest.properties.ref ? ` (${longest.properties.ref})` : '';
+      const label = name + ref;
+
+      let tClass = 'poi-tooltip';
+      if (isHighway) tClass += ' highway-callout';
+
+      // Invisible marker just for the label
+      L.circleMarker([mid[1], mid[0]], { radius: 0, opacity: 0, fillOpacity: 0, interactive: false })
+        .bindTooltip(label, { permanent: true, direction: 'center', className: tClass })
+        .addTo(targetLayer);
+    });
+
+    console.log(`[Overpass] Rendered ${geojson.features.length} segments, ${labelledNames.size} unique labels`);
   };
 
   // Highways
