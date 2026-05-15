@@ -89,7 +89,7 @@
           <div class="results-body" id="results-body"></div>
           <div style="padding:20px;border-top:1px solid rgba(168,85,247,.12);">
             <div class="step-label">Sensitivity Index</div>
-            <div style="height:140px;position:relative;"><canvas id="sensitivityChart"></canvas></div>
+            <div style="height:220px;position:relative;"><canvas id="sensitivityChart"></canvas></div>
             <button class="btn btn-outline" style="width:100%;margin-top:15px;" onclick="showToast('Report generated','success')"><i data-lucide="file-down" style="width:16px;height:16px;"></i> Download Report</button>
           </div>
         </div>
@@ -205,9 +205,16 @@
       type: 'doughnut',
       data: {
         labels: results.map(r => r.label),
-        datasets: [{ data: results.map(r => r.score), backgroundColor: results.map(r => r.color), borderWeight: 0 }]
+        datasets: [{ data: results.map(r => r.score), backgroundColor: results.map(r => r.color), borderWidth: 0 }]
       },
-      options: { cutout: '70%', plugins: { legend: { display: false } }, maintainAspectRatio: false }
+      options: {
+        cutout: '60%',
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: true, position: 'bottom', labels: { boxWidth: 8, font: { size: 9, family: 'Inter' }, padding: 6, color: '#1e1b4b' } },
+          tooltip: { enabled: true }
+        }
+      }
     });
   }
 

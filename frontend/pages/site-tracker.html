@@ -156,14 +156,17 @@
 
               <!-- Column 2: Chart -->
               <div style="height:100%; position:relative; background:#fff; border:1px solid rgba(168,85,247,0.1); border-radius:10px; padding:10px;">
-                <canvas id="progressChart"></canvas>
+                <div style="display:flex; align-items:center; gap:6px; color:#7c3aed; margin-bottom:8px;">
+                  <i data-lucide="trending-up" style="width:14px;height:14px;"></i>
+                  <span style="font-size:0.7rem; font-weight:700; text-transform:uppercase;">Construction Progress Trend</span>
+                </div>
+                <div style="height:calc(100% - 30px); position:relative;"><canvas id="progressChart"></canvas></div>
               </div>
 
-              <!-- Column 3: Insights -->
               <div class="insight-card">
                 <div style="display:flex; align-items:center; gap:6px; color:#7c3aed; margin-bottom:10px;">
-                  <i data-lucide="sparkles" style="width:14px;height:14px;"></i>
-                  <span style="font-size:0.7rem; font-weight:700; text-transform:uppercase;">Key Insights</span>
+                  <i data-lucide="brain" style="width:14px;height:14px;"></i>
+                  <span style="font-size:0.7rem; font-weight:700; text-transform:uppercase;">AI-Powered Key Insights</span>
                 </div>
                 <div id="analysis-insights" style="font-size:0.75rem; color:#4b5563; line-height:1.4; flex:1; overflow-y:auto; margin-bottom:12px;">
                   Select a site to see analysis insights.
@@ -325,7 +328,7 @@
     
     // Update Insights & Milestones
     const analysis = site.analysis || { insights: "No specific insights available for this period.", milestones: [] };
-    document.getElementById('analysis-insights').textContent = analysis.insights;
+    document.getElementById('analysis-insights').innerHTML = analysis.insights.replace(/\n/g, '<br>');
     document.getElementById('analysis-milestones').innerHTML = (analysis.milestones || []).map(m => `
       <div class="milestone-row">
         <span class="milestone-dot ${m.status === 'Completed' ? 'dot-done' : 'dot-progress'}"></span>

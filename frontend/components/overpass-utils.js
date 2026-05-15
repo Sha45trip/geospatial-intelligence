@@ -22,8 +22,8 @@ const _overpassCache = {};
  */
 function _buildQuery(type, lat, lng, radius) {
   if (type === 'highway') {
-    // Major roads only: motorway, trunk, primary, secondary
-    return `[out:json][timeout:25];(way["highway"~"motorway|trunk|primary|secondary"](around:${radius},${lat},${lng}););out geom;`;
+    // National Highways and Expressways only
+    return `[out:json][timeout:25];(way["highway"~"motorway|trunk"](around:${radius},${lat},${lng}););out geom;`;
   }
   // Rivers, canals, streams
   return `[out:json][timeout:25];(way["waterway"~"river|canal"](around:${radius},${lat},${lng}););out geom;`;

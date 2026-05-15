@@ -34,11 +34,16 @@ window.GEO_MOCK_CHANGE_DETECTION = {
     "lat": 18.5204,
     "lng": 73.8567,
     "analysis": {
-      "insights": "Construction pace has increased by 15% in Q2. Foundation work is 100% complete. Superstructure phase is currently at 45%. No significant environmental risks detected.",
+      "insights": "📡 SAR Coherence Analysis reveals a 15.3% acceleration in construction pace over Q2 2024, placing the project 8 days ahead of the revised schedule. Foundation work is 100% complete with load-bearing tests passed (verified via InSAR deformation maps). Superstructure phase is at 45% — steel erection for Block A is complete while Block B framing is at 62%.\n\n🌿 NDVI vegetation index dropped from 0.72→0.31 across the 4.2-hectare footprint, confirming full land conversion. Perimeter buffer zone vegetation remains healthy (NDVI 0.68), meeting the Environmental Clearance conditions.\n\n⚠️ Risk Alert: Sentinel-1 detected a 12mm ground subsidence near the NW corner over the last 30 days. Recommend geotechnical re-assessment before vertical expansion of Block C.\n\n📊 Compared to the competitor site (Reliance Logistics, 3.2km NE), this project is progressing 22% slower but with higher structural compliance scores.",
       "milestones": [
-        { "name": "Excavation", "status": "Completed", "date": "Jan 2024" },
-        { "name": "Foundation", "status": "Completed", "date": "Mar 2024" },
-        { "name": "Superstructure", "status": "In Progress", "date": "Est. Aug 2024" }
+        { "name": "Site Clearing & Grading", "status": "Completed", "date": "Oct 2023" },
+        { "name": "Excavation & Piling", "status": "Completed", "date": "Dec 2023" },
+        { "name": "Foundation (RCC)", "status": "Completed", "date": "Jan 2024" },
+        { "name": "Foundation Load Test", "status": "Completed", "date": "Feb 2024" },
+        { "name": "Superstructure — Block A", "status": "Completed", "date": "Apr 2024" },
+        { "name": "Superstructure — Block B", "status": "In Progress", "date": "Est. Jul 2024" },
+        { "name": "Superstructure — Block C", "status": "In Progress", "date": "Est. Aug 2024" },
+        { "name": "Roofing & Waterproofing", "status": "In Progress", "date": "Est. Sep 2024" }
       ]
     },
     "monthly_progress": [
@@ -55,11 +60,15 @@ window.GEO_MOCK_CHANGE_DETECTION = {
     "lat": 19.0760,
     "lng": 72.8777,
     "analysis": {
-      "insights": "Slow progress due to monsoon drainage requirements. Interior fit-outs scheduled for late Q3. Structural integrity verified via SAR.",
+      "insights": "📡 Multi-temporal SAR analysis indicates a slowdown in construction activity during Mar-Apr 2024, primarily attributed to pre-monsoon drainage infrastructure requirements. The 3-level basement is 100% complete; waterproofing membrane installation verified via high-resolution optical imagery.\n\n🏗️ Podium-level structural work is at 68% completion. Crane positioning analysis (shadow detection from Sentinel-2) confirms 3 active tower cranes on-site, up from 2 in the previous observation window.\n\n🌧️ Monsoon Risk: Historical rainfall data (IMD) for this micro-zone averages 2,400mm during Jun-Sep. Current drainage capacity is estimated at 1,800mm — a 25% deficit. Recommend accelerating stormwater management installation before June 15.\n\n💡 Opportunity: Adjacent land parcel (0.8 hectares, Plot 47-B) shows no activity since 2022. Potential acquisition target for Phase-2 expansion.",
       "milestones": [
-        { "name": "Piling", "status": "Completed", "date": "Dec 2023" },
-        { "name": "Basement", "status": "Completed", "date": "Feb 2024" },
-        { "name": "Podium", "status": "In Progress", "date": "Est. Oct 2024" }
+        { "name": "Deep Piling (48m)", "status": "Completed", "date": "Nov 2023" },
+        { "name": "Basement Level 3", "status": "Completed", "date": "Jan 2024" },
+        { "name": "Basement Level 2", "status": "Completed", "date": "Feb 2024" },
+        { "name": "Basement Level 1", "status": "Completed", "date": "Mar 2024" },
+        { "name": "Podium Structure", "status": "In Progress", "date": "Est. Jul 2024" },
+        { "name": "Tower Core — T1", "status": "In Progress", "date": "Est. Oct 2024" },
+        { "name": "Interior Fit-outs", "status": "In Progress", "date": "Est. Jan 2025" }
       ]
     },
     "monthly_progress": [
@@ -76,11 +85,15 @@ window.GEO_MOCK_CHANGE_DETECTION = {
     "lat": 18.5500,
     "lng": 73.8000,
     "analysis": {
-      "insights": "Highly aggressive development cycle observed. Competitor is utilizing pre-fab components. Predicted completion 2 months ahead of schedule.",
+      "insights": "🔴 COMPETITOR ALERT: This site is exhibiting an aggressive 80% completion rate — significantly ahead of projections. Multi-temporal optical analysis reveals extensive use of pre-fabricated steel modules, reducing on-site construction time by an estimated 40%.\n\n📦 Warehouse footprint analysis indicates a total covered area of ~18,500 sqm across 2 buildings. Loading dock infrastructure (8 bays detected) suggests a high-throughput logistics operation targeting e-commerce fulfillment.\n\n🛣️ Proximity Analysis: The site is 0.8km from NH-48 with direct access via a newly constructed service road (first detected in Feb 2024 imagery). This gives it a 12-minute advantage over our Pune Hub for highway access.\n\n📈 At current pace, this competitor facility is projected to be operational by Aug 2024 — approximately 5 months before our Pune Logistics Hub reaches comparable readiness.",
       "milestones": [
         { "name": "Land Clearing", "status": "Completed", "date": "Oct 2023" },
+        { "name": "Pre-fab Module Delivery", "status": "Completed", "date": "Nov 2023" },
         { "name": "Utility Hookup", "status": "Completed", "date": "Dec 2023" },
-        { "name": "Main Frame", "status": "In Progress", "date": "Est. June 2024" }
+        { "name": "Main Frame Assembly", "status": "Completed", "date": "Mar 2024" },
+        { "name": "Cladding & Roofing", "status": "Completed", "date": "Apr 2024" },
+        { "name": "Loading Dock Infra", "status": "In Progress", "date": "Est. Jun 2024" },
+        { "name": "Commissioning", "status": "In Progress", "date": "Est. Aug 2024" }
       ]
     },
     "monthly_progress": [
