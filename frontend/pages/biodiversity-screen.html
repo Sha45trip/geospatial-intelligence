@@ -10,6 +10,7 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0"></script>
   <link rel="stylesheet" href="../styles/tokens.css">
   <link rel="stylesheet" href="../styles/main.css">
   <style>
@@ -201,6 +202,11 @@
   function renderSensitivityChart(results) {
     const ctx = document.getElementById('sensitivityChart').getContext('2d');
     if (sensitivityChart) sensitivityChart.destroy();
+    
+    Chart.register(ChartDataLabels);
+
+    const total = results.reduce((acc, r) => acc + r.score, 0);
+
     sensitivityChart = new Chart(ctx, {
       type: 'doughnut',
       data: {
@@ -212,7 +218,16 @@
         maintainAspectRatio: false,
         plugins: {
           legend: { display: true, position: 'bottom', labels: { boxWidth: 8, font: { size: 9, family: 'Inter' }, padding: 6, color: '#1e1b4b' } },
-          tooltip: { enabled: true }
+          tooltip: { enabled: true },
+          datalabels: {
+            color: '#fff',
+            font: { weight: 'bold', size: 10, family: 'Inter' },
+            formatter: (value, ctx) => {
+              if (value === 0) return '';
+              const percentage = (value * 100 / total).toFixed(0) + '%';
+              return percentage;
+            }
+          }
         }
       }
     });
