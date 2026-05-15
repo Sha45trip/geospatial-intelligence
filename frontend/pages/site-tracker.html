@@ -214,6 +214,7 @@
 <script src="../components/navbar.js"></script>
 <script src="../components/sidebar.js"></script>
 <script src="../components/mock-data.js"></script>
+<script src="../components/overpass-utils.js"></script>
 <script src="../components/map-panel.js"></script>
 <script src="../components/toast.js"></script>
 <script>
@@ -256,27 +257,10 @@
 
       populateSiteSelect(allSites);
 
-      const loadGeoLayer = async (key, color, isHighway) => {
-        let data;
-        try {
-          const res = await fetch(`../../mock-data/${key}.geojson`);
-          data = await res.json();
-        } catch(e) {
-          data = isHighway ? window.GEO_MOCK_HIGHWAYS : window.GEO_MOCK_RIVERS;
-        }
-        if (data) {
-          L.geoJSON(data, {
-            style: { color: color, weight: 4 },
-            onEachFeature: (feature, layer) => {
-              let tClass = 'poi-tooltip';
-              if (isHighway) tClass += ' highway-callout';
-              layer.bindTooltip(feature.properties.name || feature.properties.category || key, {permanent: true, direction: 'center', className: tClass});
-            }
-          }).addTo(infraLayer);
-        }
-      };
-      loadGeoLayer('highways', 'black', true);
-      loadGeoLayer('rivers', '#3b82f6', false);
+      // Load real highways and rivers via Overpass API
+      const centerLat = allSites.length > 0 ? allSites[0].lat : 20.5937;
+      const centerLng = allSites.length > 0 ? allSites[0].lng : 78.9629;
+      renderInfrastructure(infraLayer, centerLat, centerLng, 20000);
 
       const urlId = new URLSearchParams(window.location.search).get('site');
       const targetId = urlId || (allSites.length > 0 ? allSites[0].id : null);
@@ -322,6 +306,7 @@
 
     trackerMap.setView([site.lat, site.lng], 14);
     siteLayer.clearLayers();
+    infraLayer.clearLayers();
     const iconHtml = `<div style="width:24px;height:24px;background:#e11d48;border:3px solid white;border-radius:50%;box-shadow:0 2px 8px rgba(0,0,0,0.3);"></div>`;
     L.marker([site.lat, site.lng], {
       icon: L.divIcon({ className:'', html: iconHtml, iconSize:[24,24], iconAnchor:[12,12] })
@@ -329,6 +314,9 @@
     .bindTooltip(site.name, {permanent: true, direction: 'top', offset: [0, -12], className: 'poi-tooltip site-callout'})
     .addTo(siteLayer);
     L.circle([site.lat, site.lng], { radius:10000, color:'#9333ea', weight:1.5, dashArray:'6,10', fillOpacity:0.05 }).addTo(siteLayer);
+
+    // Load real roads & rivers around this site
+    renderInfrastructure(infraLayer, site.lat, site.lng, 15000);
 
     const prog = site.monthly_progress || [];
     renderTimeline(prog);

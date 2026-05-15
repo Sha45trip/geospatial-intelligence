@@ -101,6 +101,7 @@
 <script src="../components/navbar.js"></script>
 <script src="../components/sidebar.js"></script>
 <script src="../components/mock-data.js"></script>
+<script src="../components/overpass-utils.js"></script>
 <script src="../components/map-panel.js"></script>
 <script src="../components/toast.js"></script>
 <script>
@@ -110,7 +111,7 @@
   function initMap() {
     bioMap = L.map('bio-map',{zoomControl:false,attributionControl:true}).setView([18.5204, 73.8567], 11);
     L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png').addTo(bioMap);
-    ['buffer','protected','ramsar','kba','heritage','rivers','own_sites','competitor_sites','schedule_v','eco_sensitive'].forEach(k => bioLayers[k] = L.layerGroup().addTo(bioMap));
+    ['buffer','protected','ramsar','kba','heritage','rivers','highways','own_sites','competitor_sites','schedule_v','eco_sensitive'].forEach(k => bioLayers[k] = L.layerGroup().addTo(bioMap));
   }
 
   function setRadius(km,btn) { activeRadius = km; document.querySelectorAll('.pill').forEach(p=>p.classList.remove('active')); btn.classList.add('active'); }
@@ -149,29 +150,7 @@
         const offsetLng = lng + (Math.random() - 0.5) * (activeRadius / 111);
         
         if (d.key === 'rivers' || d.key === 'highways') {
-          const renderGeo = (data) => {
-            L.geoJSON(data, {
-              style: { color: d.key === 'highways' ? 'black' : d.color, weight: 4 },
-              onEachFeature: (feature, layer) => {
-                let tClass = 'poi-tooltip';
-                if (d.key === 'highways') tClass += ' highway-callout';
-                layer.bindTooltip(feature.properties.name || feature.properties.category || d.label, {permanent: true, direction: 'center', className: tClass});
-              }
-            }).addTo(bioLayers[d.key] || bioLayers.buffer);
-          };
-
-          if (!cachedGeoJSON[d.key]) {
-            fetch(`../../mock-data/${d.key}.geojson`).then(res => res.json()).then(data => {
-              cachedGeoJSON[d.key] = data;
-              renderGeo(data);
-            }).catch(e => {
-              console.warn("Could not load", d.key, "using fallback data");
-              cachedGeoJSON[d.key] = d.key === 'highways' ? window.GEO_MOCK_HIGHWAYS : window.GEO_MOCK_RIVERS;
-              renderGeo(cachedGeoJSON[d.key]);
-            });
-          } else {
-            renderGeo(cachedGeoJSON[d.key]);
-          }
+          // Real infrastructure is loaded separately via renderInfrastructure below
         } else if (d.key === 'own_sites' || d.key === 'competitor_sites') {
           let tClass = 'poi-tooltip site-callout';
           const iconColor = '#e11d48';
@@ -197,6 +176,12 @@
     document.getElementById('map-loader').style.display = 'none';
     renderResults(results);
     renderSensitivityChart(results);
+
+    // Load real highways & rivers from Overpass API
+    const infraTarget = L.layerGroup().addTo(bioMap);
+    bioLayers['_infra'] = infraTarget;
+    renderInfrastructure(infraTarget, lat, lng, activeRadius * 1000);
+
     if (typeof lucide !== 'undefined') lucide.createIcons();
   }
 
